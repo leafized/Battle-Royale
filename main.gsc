@@ -19,7 +19,7 @@
 #define game_weapon = "usp_tactical_mp";
 init()
 {
-    
+     
     level thread onPlayerConnect();
     level.airDropCrates = getEntArray( "care_package", "targetname" );
     level.airDropCrateCollision = getEnt( level.airDropCrates[0].target, "targetname" );
