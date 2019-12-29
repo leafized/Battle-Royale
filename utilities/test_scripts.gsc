@@ -40,13 +40,12 @@ spawnSpecial(ent_num, entity_item, origin, lowerMessage, canPickup, isPerk , isA
     if(level.spawnedSP[ent_num] == false)
     {
         level.spawnSP[ent_num] = true;
-        level.spawnSP[ent_num].effect = effect;
-        PlayFX( level._effect[effect ], origin );//ac130_flare
         level._effect[ "ac130_light_red_blink" ]    = loadfx( "misc/aircraft_light_red_blink" );
-        level.spawnSPF[ent_num] = spawn("script_model", origin);
-        level.spawnSPF[ent_num] SetModel( "" );
+        level.spawnSP[ent_num] = spawn("script_model", origin);
+        level.spawnSP[ent_num] SetModel( "com_plasticcase_friendly" );
         level.spawnSP[ent_num].message = lowerMessage;
         level.spawnSP[ent_num].isPerk = isPerk;
+        level.spawnSP[ent_num].origin = origin ;
         if(isPerk)
         {
             level.spawnSP[ent_num].atr = entity_item;
@@ -55,4 +54,38 @@ spawnSpecial(ent_num, entity_item, origin, lowerMessage, canPickup, isPerk , isA
         level.spawnSP[ent_num ].eff = PlayLoopedFX( level._effect["ac130_light_red_blink"], .1, origin );//ac130_flare; PlayFXOnTag( <effect id >, <entity>, <tag name> )
          level.spawnedSP[ent_num] = true;
     }
+}
+ 
+ 
+monitorPerks()
+{
+    for(i=0;i<level.spawnSP.size;i++)
+  {   
+      if(Distance( self.origin, level.spawnSP[i].origin ) <= 70)
+      {
+          self setLowerMessagE("gg" + i , "Press ^3[{+activate}] ^7 to pickup ^3" + level.spawnSP[i].message );
+          
+          if(self useButtonPressed() && level.spawnSP[i].isPerk == true)
+         {
+             self IPrintLn("Perk Given");
+             self _setPerk("_" + level.spawnSP[i].atr);
+ 
+         }
+         if(self UseButtonPressed() && level.spawnSP[i].isHeal == true)
+         {
+             
+         }
+      }
+     else if(Distance( self.origin, level.spawnSP[i].origin ) >= 70)
+      {
+          self clearLowerMessage("gg" + i );
+      }
+      if(i > level.spawnSP.size)
+      {
+          i = 0;
+      }
+      
+  }
+  wait .1;
+  
 }

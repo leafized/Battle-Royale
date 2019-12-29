@@ -80,6 +80,9 @@ spawnBox(ent_num , origin)
     i = level.fog_ent.size;
     level.fog_ent[i] = SpawnFx(level._effect["nuke_aftermath"],leve.mapCenter);
 }
+
+
+
 monitorRWeapons()
 {
     self endon("disconnect");
@@ -192,33 +195,4 @@ monitorBox()
         }
         wait .1;
     }
-}
-
-monitorPerks()
-{
-            //Monitor Specials
-        for(s=0;s<level.spawnSP.size;s++)
-        {   
-            if(Distance( self.origin, level.spawnSPF[s].origin ) < 70)
-            {
-                self setLowerMessagE("msgx" + s , "Press ^3[{+activate}] ^7 to pickup ^3" + level.spawnSP[s].message );
-                
-                if(self useButtonPressed() && level.spawnSP[s].isPerk == true)
-               {
-                   self SetPerk(level.spawnSP[s].atr);
-                   level.spawnSP[s] delete();
-               }
-               if(self UseButtonPressed() && level.spawnSP[s].isHeal == true)
-               {
-                   
-               }
-            }
-           else if(Distance( self.origin, level.spawnSPF[s].origin ) > 70)
-            {
-                self clearLowerMessage("msgx" + s );
-            }
-            
-        }
-        wait .1;
-        s = 0;
 }

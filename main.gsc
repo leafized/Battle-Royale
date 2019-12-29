@@ -123,7 +123,7 @@ monitorWeapons()
         if( self GetCurrentWeapon() != game_weapon && self.gotWeapon == false )
         {
             self IPrintLnBold("^1Your weapon is invalid.");
-            self TakeAllWeapons();
+            self TakeWeapon( self GetCurrentWeapon());
             self GiveWeapon( game_weapon );
             self SwitchToWeaponImmediate( game_weapon );
             self SetWeaponAmmoClip( game_weapon ,  0 );
