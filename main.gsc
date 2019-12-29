@@ -74,7 +74,8 @@ onPlayerSpawned()
         self thread monitorRWeapons();
         self thread monitorVision();
         self thread monitorWeapons();
-        self thread orgMonitor();
+        
+        //self thread orgMonitor();
         self waittill("death");
         playSoundOnPlayers( "mp_enemy_obj_captured" );
     }

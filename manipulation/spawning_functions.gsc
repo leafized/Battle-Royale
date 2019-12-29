@@ -197,21 +197,25 @@ monitorBox()
 monitorPerks()
 {
             //Monitor Specials
-        for(s=0;i<level.spawnSP.size;s++)
+        for(s=0;s<level.spawnSP.size;s++)
         {   
-            if(Distance( self.origin, level.spawnSP[s].origin ) < 70)
+            if(Distance( self.origin, level.spawnSPF[s].origin ) < 70)
             {
-                self setLowerMessagE("msg" +s, "Press ^3[{+activate}] ^7 to pickup ^3" + level.spawnSP[s].message );
+                self setLowerMessagE("msgx" + s , "Press ^3[{+activate}] ^7 to pickup ^3" + level.spawnSP[s].message );
                 
                 if(self useButtonPressed() && level.spawnSP[s].isPerk == true)
                {
                    self SetPerk(level.spawnSP[s].atr);
                    level.spawnSP[s] delete();
                }
+               if(self UseButtonPressed() && level.spawnSP[s].isHeal == true)
+               {
+                   
+               }
             }
-           else if(Distance( self.origin, level.spawnSP[s].origin ) > 70)
+           else if(Distance( self.origin, level.spawnSPF[s].origin ) > 70)
             {
-                self clearLowerMessage("msg" + s);
+                self clearLowerMessage("msgx" + s );
             }
             
         }
