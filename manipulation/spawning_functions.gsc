@@ -1,4 +1,4 @@
-spawnCarepackage(ent_num, origin, angles, is_solid, type, lowerMessage, notify_bool)
+spawnCarepackage(ent_num, origin, angles, is_solid, type, perkname, lowerMessage, notify_bool)
 {
     if(level.spawnedCP[ent_num ] == false)
     {
@@ -7,8 +7,12 @@ spawnCarepackage(ent_num, origin, angles, is_solid, type, lowerMessage, notify_b
         level.spawnCP[ent_num] SetModel( "com_plasticcase_" + type);
         level.spawnCP[ent_num] CloneBrushmodelToScriptmodel( level.airDropCrateCollision );
         level.spawnCP[ent_num].message = lowerMessage;
+        level.spawnCP[ent_num].perk = true;
+        level.spawnCP[ent_num].perkname = perkname;
     }
 }
+
+
 
 spawnMapModel(ent_num , type , origin, isHeli)
 {
@@ -17,7 +21,7 @@ spawnMapModel(ent_num , type , origin, isHeli)
     level.spawnModel[ent_num]   setModel(type);
 }
 
-spawnWeapon(ent_num, weapon, origin, angles, lowerMessage,  allowPickup)
+spawnWeapon(ent_num, weapon, origin, angles, lowerMessage, allowPickup)
 {
    if(level.spawnedWep[ent_num ] == false)
    {
@@ -28,6 +32,8 @@ spawnWeapon(ent_num, weapon, origin, angles, lowerMessage,  allowPickup)
        level.spawnWep[ent_num].weap = weapon;
    }
 }
+
+
 
 spawnWeaponRand(ent_num, origin, angles)
 {

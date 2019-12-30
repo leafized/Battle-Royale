@@ -1,3 +1,79 @@
+
+onOneLeftEvent( team )
+{
+    winner = getLastLivingPlayer();
+   
+    wait 1;
+    level.showingFinalKillcam = true;
+   
+    foreach( player in level.players )
+        player thread do_killcam_final( winner );
+       
+    while ( level.showingFinalKillcam )
+        wait ( 0.05 );    
+    level thread maps\mp\gametypes\_gamelogic::endGame( winner, &"MP_ENEMIES_ELIMINATED" );    
+}
+do_killcam_final( attacker )
+{
+    attackerNum  = attacker GetEntityNumber();
+   
+    maxtime   = 6;
+    camtime   = 4;
+    postdelay = 2;
+   
+    predelay      = .2;
+    killcamlength = camtime + postdelay + 1;
+    killcamoffset = camtime + predelay;
+   
+    self notify ( "begin_killcam", getTime() );
+   
+    visionSetNaked( "mpOutro", 6 );
+    setDvar( "scr_gameended", 1 ); // 1 - end game | 2 - round
+   
+    // ignore spectate permissions
+    self allowSpectateTeam("allies", true);
+    self allowSpectateTeam("axis", true);
+    self allowSpectateTeam("freelook", true);
+    self allowSpectateTeam("none", true);
+   
+    self.sessionstate         = "spectator";
+    self.forcespectatorclient = attackerNum;
+   
+    self.killcamentity = attacker;
+    self.archivetime   = killcamoffset;
+    self.killcamlength = killcamlength;
+    self.psoffsettime  = 0;
+    thread doFinalKillCamFX( self.archivetime - .05 - predelay );
+   
+    if ( isDefined( attacker ) && level.showingFinalKillcam ) // attacker may have disconnected
+    {
+        self openMenu( "killedby_card_display" );
+        self SetCardDisplaySlot( attacker, 7 );
+    }
+    wait killcamoffset + .1;
+   
+    level.showingFinalKillcam = false;
+}
+ 
+doFinalKillCamFX( camTime )
+{
+    if ( isDefined( level.doingFinalKillcamFx ) )
+        return;
+    level.doingFinalKillcamFx = true;
+   
+    intoSlowMoTime = camTime;
+    if ( intoSlowMoTime > 1.0 )
+    {
+        intoSlowMoTime = 1.0;
+        wait( camTime - 1.0 );
+    }
+   
+    setSlowMotion( 1.0, 0.25, intoSlowMoTime ); // start timescale, end timescale, lerp duration
+    wait( intoSlowMoTime + .5 );
+    setSlowMotion( 0.25, 1, 1.0 );
+   
+    level.doingFinalKillcamFx = undefined;
+}
 getFont()
 {
     return "default";
@@ -9,7 +85,7 @@ retClass()
 }
 SpawnBots5()
 {
-    for(i = 0; i < 5; i++)
+    for(i = 0; i < 3; i++)
     {
         ent = addtestclient();
         wait 1;
@@ -28,64 +104,449 @@ initBot()
     self notify("menuresponse", "changeclass", "class" + randomInt( 5));
 
 }
+
 getWeaponNameString(base_weapon)
 {
     tableRow         = tableLookup("mp/statstable.csv",4,base_weapon,0);
     weaponNameString = tableLookupIString("mp/statstable.csv",0,tableRow,3);
     return weaponNameString;
 }
-
-spawnSpecial(ent_num, entity_item, origin, lowerMessage, canPickup, isPerk , isAmmo, isKillstreak)
-{
-    if(level.spawnedSP[ent_num] == false)
-    {
-        level.spawnSP[ent_num] = true;
-        level._effect[ "ac130_light_red_blink" ]    = loadfx( "misc/aircraft_light_red_blink" );
-        level.spawnSP[ent_num] = spawn("script_model", origin);
-        level.spawnSP[ent_num] SetModel( "com_plasticcase_friendly" );
-        level.spawnSP[ent_num].message = lowerMessage;
-        level.spawnSP[ent_num].isPerk = isPerk;
-        level.spawnSP[ent_num].origin = origin ;
-        if(isPerk)
-        {
-            level.spawnSP[ent_num].atr = entity_item;
-        }
-        wait .05;
-        level.spawnSP[ent_num ].eff = PlayLoopedFX( level._effect["ac130_light_red_blink"], .1, origin );//ac130_flare; PlayFXOnTag( <effect id >, <entity>, <tag name> )
-         level.spawnedSP[ent_num] = true;
-    }
-}
- 
  
 monitorPerks()
 {
-    for(i=0;i<level.spawnSP.size;i++)
-  {   
-      if(Distance( self.origin, level.spawnSP[i].origin ) <= 70)
-      {
-          self setLowerMessagE("gg" + i , "Press ^3[{+activate}] ^7 to pickup ^3" + level.spawnSP[i].message );
-          
-          if(self useButtonPressed() && level.spawnSP[i].isPerk == true)
-         {
-             self IPrintLn("Perk Given");
-             self _setPerk("_" + level.spawnSP[i].atr);
- 
-         }
-         if(self UseButtonPressed() && level.spawnSP[i].isHeal == true)
-         {
-             
-         }
-      }
-     else if(Distance( self.origin, level.spawnSP[i].origin ) >= 70)
-      {
-          self clearLowerMessage("gg" + i );
-      }
-      if(i > level.spawnSP.size)
-      {
-          i = 0;
-      }
-      
-  }
-  wait .1;
-  
+    self endon("disconnect");
+    for(;;)
+    {
+       for(i=0;i<level.spawnCP.size;i++)
+       {   
+           if(Distance( self.origin, level.spawnCP[i].origin ) <= 70)
+           {
+               self setLowerMessage("messageBox" + i , "Press ^3[{+activate}] ^7 to pickup ^3" + level.spawnCP[i].message, undefined, 50 );
+               
+              if(self useButtonPressed())
+              {
+                  self IPrintLn("Perk Given | " + level.spawnCP[i].message);
+                  self _setPerk("_" + level.spawnCP[i].perk);
+                  
+                  
+              }
+           }
+            
+           if(Distance( self.origin, level.spawnCP[i].origin ) > 70)
+           {
+               self clearLowerMessage("messageBox" + i );
+           }
+           
+           if(i > level.spawnCP.size)
+           {
+               i = 0;
+           }
+           
+       }
+       wait .1;
+    }
+}
+
+notifyHud(msg1,msg2,msg3,time)
+{
+notifyData             = spawnstruct();
+notifyData.titleText   = msg1; //Line 1
+notifyData.notifyText  = msg2; //Line 2
+notifyData.notifyText2 = msg3; //Line 3
+notifyData.glowColor   = m_Color; //RGB Color array divided by 100
+notifyData.Duration    = time;
+self thread notifyMessage( notifyData );
+}
+
+notifyMessage( notifyData )
+{
+    self endon ( "death" );
+    self endon ( "disconnect" );
+    
+    if ( !isDefined( notifyData.slot ) )
+        notifyData.slot = 0;
+    
+    slot = notifyData.slot;
+
+    if ( !isDefined( notifyData.type ) )
+        notifyData.type = "";
+    
+    if ( !isDefined( self.doingSplash[ slot ] ) )
+    {
+        self thread showNotifyMessage( notifyData );
+        return;
+    }/*
+    else if ( notifyData.type == "rank" && self.doingSplash[ slot ].type != "challenge" && self.doingSplash[ slot ].type != "killstreak" )
+    {
+        self thread showNotifyMessage( notifyData );
+        return;
+    }*/
+    
+    self.splashQueue[ slot ][ self.splashQueue[ slot ].size ] = notifyData;
+}
+
+setNotyTheme()
+{
+    self.menuColors = (.2,0.4,1);
+    if ( level.splitscreen )
+    {
+        titleSize     = 1.5;
+        textSize      = 1;
+        iconSize      = 24;
+        font          = "default";
+        point         = "TOP";
+        relativePoint = "BOTTOM";
+        yOffset       = 30;
+        xOffset       = 0;
+    }
+    else
+    {
+        titleSize     = 1.4;
+        textSize      = 1.2;
+        iconSize      =  0;
+        font          = "objective";
+        point         = "RIGHT";
+        relativePoint = "LEFT";
+        yOffset       = 10;
+        xOffset       = -10;
+    }
+    
+    self.notifyTitle = createFontString( font, titleSize );
+    self.notifyTitle setPoint( point, undefined, xOffset, yOffset );
+    self.notifyTitle.glowColor      = self.menuColors;
+    self.notifyTitle.glowAlpha      = .7;
+    self.notifyTitle.hideWhenInMenu = true;
+    self.notifyTitle.archived       = false;
+
+
+    self.notifyText = createFontString( font, textSize );
+    self.notifyText setParent( self.notifyTitle );
+    self.notifyText setPoint( point, relativePoint, 0, yOffset );
+    self.notifyText.glowColor      = self.menuColors;
+    self.notifyText.glowAlpha      = .7;
+    self.notifyText.hideWhenInMenu = true;
+    self.notifyText.archived       = false;
+    self.notifyText.alpha          = 0;
+
+    self.notifyText2 = createFontString( font, textSize );
+    self.notifyText2 setParent( self.notifyTitle );
+    self.notifyText2 setPoint( point, relativePoint, 0, yOffset );
+    self.notifyText2.glowColor      = self.menuColors;
+    self.notifyText2.glowAlpha      = .7;
+    self.notifyText2.hideWhenInMenu = true;
+    self.notifyText2.archived       = false;
+    self.notifyText2.alpha          = 0;
+
+    self.doingSplash = [];
+    self.doingSplash[0] = undefined;
+    self.doingSplash[1] = undefined;
+    self.doingSplash[2] = undefined;
+    self.doingSplash[3] = undefined;
+
+    self.splashQueue = [];
+    self.splashQueue[0] = [];
+    self.splashQueue[1] = [];
+    self.splashQueue[2] = [];
+    self.splashQueue[3] = [];
+}
+showNotifyMessage( notifyData )
+{
+    self endon("disconnect");
+
+
+    if ( level.gameEnded )
+    {
+        if ( isDefined( notifyData.type ) && notifyData.type == "rank" )
+        {
+            self setClientDvar( "ui_promotion", 1 );
+            self.postGamePromotion = true;
+        }
+        
+        return;
+    }
+    
+    self.doingSplash[ slot ] = notifyData;
+
+
+    if ( isDefined( notifyData.duration ) )
+        duration = notifyData.duration;
+    else if ( level.gameEnded )
+        duration = 2.0;
+    else
+        duration = 4.0;
+    
+
+    if ( isDefined( notifyData.sound ) )
+        self playLocalSound( notifyData.sound );
+
+    if ( isDefined( notifyData.leaderSound ) )
+        self leaderDialogOnPlayer( notifyData.leaderSound );
+    
+    if ( isDefined( notifyData.glowColor ) )
+        glowColor = notifyData.glowColor;
+    else
+        glowColor = (0.3, 0.6, 0.3);
+
+    anchorElem = self.notifyTitle;
+
+    if ( isDefined( notifyData.titleText ) )
+    {
+        if ( isDefined( notifyData.titleLabel ) )
+            self.notifyTitle.label = notifyData.titleLabel;
+        else
+            self.notifyTitle.label = &"";
+
+        if ( isDefined( notifyData.titleLabel ) && !isDefined( notifyData.titleIsString ) )
+            self.notifyTitle setValue( notifyData.titleText );
+        else
+            self.notifyTitle setText( notifyData.titleText );
+        self.notifyTitle setPulseFX( int(25*duration), int(duration*1000), 1000 );
+        self.notifyTitle.glowColor = glowColor; 
+        self.notifyTitle.alpha = 1;
+    }
+
+    if ( isDefined( notifyData.textGlowColor ) )
+        glowColor = notifyData.textGlowColor;
+
+    if ( isDefined( notifyData.notifyText ) )
+    {
+        if ( isDefined( notifyData.textLabel ) )
+            self.notifyText.label = notifyData.textLabel;
+        else
+            self.notifyText.label = &"";
+
+        if ( isDefined( notifyData.textLabel ) && !isDefined( notifyData.textIsString ) )
+            self.notifyText setValue( notifyData.notifyText );
+        else
+            self.notifyText setText( notifyData.notifyText );
+        self.notifyText setPulseFX( 100, int(duration*1000), 1000 );
+        self.notifyText.glowColor = glowColor;  
+        self.notifyText.alpha = 1;
+        anchorElem = self.notifyText;
+    }
+
+    if ( isDefined( notifyData.notifyText2 ) )
+    {
+        self.notifyText2 setParent( anchorElem );
+        
+        if ( isDefined( notifyData.text2Label ) )
+            self.notifyText2.label = notifyData.text2Label;
+        else
+            self.notifyText2.label = &"";
+
+        self.notifyText2 setText( notifyData.notifyText2 );
+        self.notifyText2 setPulseFX( 100, int(duration*1000), 1000 );
+        self.notifyText2.glowColor = glowColor; 
+        self.notifyText2.alpha = 1;
+        anchorElem = self.notifyText2;
+    }
+
+    if ( isDefined( notifyData.iconName ) )
+    {
+        self.notifyIcon setParent( anchorElem );
+        self.notifyIcon setShader( notifyData.iconName, 60, 60 );
+        self.notifyIcon.alpha = 0;
+
+        if ( isDefined( notifyData.iconOverlay ) )
+        {
+            self.notifyIcon fadeOverTime( 0.15 );
+            self.notifyIcon.alpha = 1;
+
+            //if ( !isDefined( notifyData.overlayOffsetY ) )
+                notifyData.overlayOffsetY = 0;
+
+            self.notifyOverlay setParent( self.notifyIcon );
+            self.notifyOverlay setPoint( "CENTER", "CENTER", 0, notifyData.overlayOffsetY );
+            self.notifyOverlay setShader( notifyData.iconOverlay, 512, 512 );
+            self.notifyOverlay.alpha = 0;
+            self.notifyOverlay.color = (1,0,0);
+
+            self.notifyOverlay fadeOverTime( 0.4 );
+            self.notifyOverlay.alpha = 0.85;
+    
+            self.notifyOverlay scaleOverTime( 0.4, 32, 32 );
+            
+
+            self.notifyIcon fadeOverTime( 0.75 );
+            self.notifyIcon.alpha = 0;
+    
+            self.notifyOverlay fadeOverTime( 0.75 );
+            self.notifyOverlay.alpha = 0;
+        }
+        else
+        {
+            self.notifyIcon fadeOverTime( 1.0 );
+            self.notifyIcon.alpha = 1;
+
+
+
+            self.notifyIcon fadeOverTime( 0.75 );
+            self.notifyIcon.alpha = 0;
+        }       
+    }
+    else
+    {
+
+    }
+
+    self notify ( "notifyMessageDone" );
+    self thread resetNotify();
+    self.doingSplash[ slot ] = undefined;
+
+}
+
+
+initNotifyMessage()
+{
+    if ( level.splitscreen )
+    {
+        titleSize = 2.0;
+        textSize = 1.5;
+        iconSize = 24;
+        font = "default";
+        point = "TOP";
+        relativePoint = "BOTTOM";
+        yOffset = 30;
+        xOffset = 0;
+    }
+    else
+    {
+        titleSize     = 2.5;
+        textSize      = 1.75;
+        iconSize      = 0;
+        font          = "objective";
+        point         = "TOP";
+        relativePoint = "BOTTOM";
+        yOffset       = 50;
+        xOffset       = 0;
+    }
+    
+    self.notifyTitle = createFontString( font, titleSize );
+    self.notifyTitle setPoint( point, undefined, xOffset, yOffset );
+    self.notifyTitle.glowColor = (0.2, 0.3, 0.7);
+    self.notifyTitle.glowAlpha = 1;
+    self.notifyTitle.hideWhenInMenu = true;
+    self.notifyTitle.archived = false;
+    self.notifyTitle.alpha = 0;
+
+    self.notifyText = createFontString( font, textSize );
+    self.notifyText setParent( self.notifyTitle );
+    self.notifyText setPoint( point, relativePoint, 0, 0 );
+    self.notifyText.glowColor = (0.2, 0.3, 0.7);
+    self.notifyText.glowAlpha = 1;
+    self.notifyText.hideWhenInMenu = true;
+    self.notifyText.archived = false;
+    self.notifyText.alpha = 0;
+
+    self.notifyText2 = createFontString( font, textSize );
+    self.notifyText2 setParent( self.notifyTitle );
+    self.notifyText2 setPoint( point, relativePoint, 0, 0 );
+    self.notifyText2.glowColor = (0.2, 0.3, 0.7);
+    self.notifyText2.glowAlpha = 1;
+    self.notifyText2.hideWhenInMenu = true;
+    self.notifyText2.archived = false;
+    self.notifyText2.alpha = 0;
+
+    self.notifyIcon = createIcon( "white", 0, 0 );
+    self.notifyIcon setParent( self.notifyText2 );
+    self.notifyIcon setPoint( point, relativePoint, 0, 0 );
+    self.notifyIcon.hideWhenInMenu = true;
+    self.notifyIcon.archived = false;
+    self.notifyIcon.alpha = 0;
+
+    self.notifyOverlay = createIcon( "white", iconSize, iconSize );
+    self.notifyOverlay setParent( self.notifyIcon );
+    self.notifyOverlay setPoint( "CENTER", "CENTER", 0, 0 );
+    self.notifyOverlay.hideWhenInMenu = true;
+    self.notifyOverlay.archived = false;
+    self.notifyOverlay.alpha = 0;
+
+    self.doingSplash = [];
+    self.doingSplash[0] = undefined;
+    self.doingSplash[1] = undefined;
+    self.doingSplash[2] = undefined;
+    self.doingSplash[3] = undefined;
+
+    self.splashQueue = [];
+    self.splashQueue[0] = [];
+    self.splashQueue[1] = [];
+    self.splashQueue[2] = [];
+    self.splashQueue[3] = [];
+}
+resetNotify()
+{
+    if ( level.splitscreen )
+    {
+        titleSize = 2.0;
+        textSize = 1.5;
+        iconSize = 24;
+        font = "default";
+        point = "TOP";
+        relativePoint = "BOTTOM";
+        yOffset = 30;
+        xOffset = 0;
+    }
+    else
+    {
+        titleSize = 2.5;
+        textSize = 1.75;
+        iconSize = 30;
+        font = "objective";
+        point = "TOP";
+        relativePoint = "BOTTOM";
+        yOffset = 50;
+        xOffset = 0;
+    }
+    
+    self.notifyTitle = createFontString( font, titleSize );
+    self.notifyTitle setPoint( point, undefined, xOffset, yOffset );
+    self.notifyTitle.glowColor = (0.2, 0.3, 0.7);
+    self.notifyTitle.glowAlpha = 1;
+    self.notifyTitle.hideWhenInMenu = true;
+    self.notifyTitle.archived = false;
+    self.notifyTitle.alpha = 0;
+
+    self.notifyText = createFontString( font, textSize );
+    self.notifyText setParent( self.notifyTitle );
+    self.notifyText setPoint( point, relativePoint, 0, 0 );
+    self.notifyText.glowColor = (0.2, 0.3, 0.7);
+    self.notifyText.glowAlpha = 1;
+    self.notifyText.hideWhenInMenu = true;
+    self.notifyText.archived = false;
+    self.notifyText.alpha = 0;
+
+    self.notifyText2 = createFontString( font, textSize );
+    self.notifyText2 setParent( self.notifyTitle );
+    self.notifyText2 setPoint( point, relativePoint, 0, 0 );
+    self.notifyText2.glowColor = (0.2, 0.3, 0.7);
+    self.notifyText2.glowAlpha = 1;
+    self.notifyText2.hideWhenInMenu = true;
+    self.notifyText2.archived = false;
+    self.notifyText2.alpha = 0;
+
+    self.notifyIcon = createIcon( "white", 0, 0 );
+    self.notifyIcon setParent( self.notifyText2 );
+    self.notifyIcon setPoint( point, relativePoint, 0, 0 );
+    self.notifyIcon.hideWhenInMenu = true;
+    self.notifyIcon.archived = false;
+    self.notifyIcon.alpha = 0;
+
+    self.notifyOverlay = createIcon( "white", iconSize, iconSize );
+    self.notifyOverlay setParent( self.notifyIcon );
+    self.notifyOverlay setPoint( "CENTER", "CENTER", 0, 0 );
+    self.notifyOverlay.hideWhenInMenu = true;
+    self.notifyOverlay.archived = false;
+    self.notifyOverlay.alpha = 0;
+
+    self.doingSplash = [];
+    self.doingSplash[0] = undefined;
+    self.doingSplash[1] = undefined;
+    self.doingSplash[2] = undefined;
+    self.doingSplash[3] = undefined;
+
+    self.splashQueue = [];
+    self.splashQueue[0] = [];
+    self.splashQueue[1] = [];
+    self.splashQueue[2] = [];
+    self.splashQueue[3] = [];
 }

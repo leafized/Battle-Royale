@@ -28,8 +28,9 @@ init()
      PreCacheShader( "compassping_enemyfiring" );
     level thread mapSetup();
     SetDvar( "g_hardcore", 1 );
+    level.onOneLeftEvent = ::onOneLeftEvent;
+    setDvar( "scr_" + level.gameType + "_numlives", 1 );
 }
- 
 onPlayerConnect()
 {
     for(;;)
@@ -48,21 +49,22 @@ onPlayerSpawned()
         self waittill("spawned_player");
         if(isDefined(self.playerSpawned))
             continue;
-        self.playerSpawned = true;
-        self freezeControls(false);
-        if(GetDvar("mapname") != "mp_rust" && GetDvar("mapname") != "mp_derail")
-        {
-            self IPrintLnBold("^1NOT AVIALABLE ON THIS MAP");
-        }
-        if(self isHost() && self.isFirstSpa == false)
-        {
-            self thread SpawnBots5();
-            self.isFirstSpa = true;
-        }
+            self thread setNotyTheme();
+            self.playerSpawned = true;
+            self freezeControls(false);
+            if(GetDvar("mapname") != "mp_rust" && GetDvar("mapname") != "mp_derail")
+            {
+                self IPrintLnBold("^1NOT AVIALABLE ON THIS MAP");
+            }
+            if(self isHost() && self.isFirstSpa == false)
+            {
+                self thread SpawnBots5();
+                self.isFirstSpa = true;
+            }
            if(!level.overFlowFix_Started && self isHost())
-   {
-       level thread init_overFlowFix();
-   }
+       {
+           level thread init_overFlowFix();
+       }
         self TakeAllWeapons();
         self.maxHealth = 150;
         self.health    = 150;
@@ -103,7 +105,6 @@ flying_intro_custom()
 }
 monitorVision()
 {
-    self endon("death");
     self endon("disconnect");
     for(;;)
     {
