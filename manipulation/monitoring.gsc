@@ -106,6 +106,7 @@ monitorDeadBoi()
     {
         self waittill("death");
         self thread monitorWeapons();
+        self.playerSpawned = false;
         wait .2;
     }
 }

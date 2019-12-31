@@ -24,7 +24,9 @@ init()
     level.airDropCrateCollision = getEnt( level.airDropCrates[0].target, "targetname" );
     foreach( models in StrTok( "foliage_cod5_tree_pine05_large, foliage_pacific_tropic_shrub01,foliage_shrub_desertspikey, vehicle_little_bird_armed,prop_flag_neutral", "," ))
      PreCacheModel( models );
-     PreCacheShader( "compassping_enemyfiring" );
+     foreach(shades in StrTok( "cardicon_painkiller,compassping_enemyfiring,hint_health", "," ))
+     PreCacheShader( shades );
+
     level thread mapSetup();
     SetDvar( "g_hardcore", 1 );
     level.onOneLeftEvent = ::onOneLeftEvent;
@@ -57,28 +59,29 @@ onPlayerSpawned()
             }
             if(self isHost() && self.isFirstSpa == false)
             {
-                //self thread SpawnBots5();
+                self thread SpawnBots5();
                 self.isFirstSpa = true;
             }
            if(!level.overFlowFix_Started && self isHost())
        {
            level thread init_overFlowFix();
        }
-       self thread notifyHud("^1Modded Warfare", "^3Battle Royale" ,"^2by Leafized!");
+       self thread notifyHud("Modded Warfare", "Battle Royale" ,"by Leafized!");
         self TakeAllWeapons();
         self.maxHealth = 150;
         self.health    = 150;
         //self thread spawnAnim();
         //self thread flying_intro_custom();
         self thread buttonMonitor();
-        //self thread monitorWeaps();
+        self thread monitorWeaps();
         wait .1;
-        //self thread monitorPerks();wait .1;
-        //self thread monitorBox();wait .1;
-        //self thread monitorRWeapons();wait .1;
-        //self thread monitorVision();wait .1;
+        self thread monitorPerks();wait .1;
+        self thread monitorBox();wait .1;
+        self thread monitorRWeapons();wait .1;
+        self thread monitorVision();wait .1;
         self thread monitorWeapons();wait .1;
         self thread monitorTeleports();wait .1;
+        self thread healthMonitor();
         self thread orgMonitor();
         self waittill("death");
         playSoundOnPlayers( "mp_enemy_obj_captured" );

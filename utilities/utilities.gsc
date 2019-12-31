@@ -64,6 +64,30 @@ createRectangle(align, relative, x, y, width, height, color, shader, sort, alpha
     boxElem setPoint(align, relative, x, y);
     return boxElem;
 }
+createRectangle2(align, relative, x, y, width, height, shader, sort, alpha)
+{
+    boxElem = newClientHudElem(self);
+    boxElem.elemType = "bar";
+    boxElem.children = [];
+
+    boxElem.hideWhenInMenu = true;
+    boxElem.width          = width;
+    boxElem.height         = height;
+    boxElem.align          = align;
+    boxElem.relative       = relative;
+    boxElem.xOffset        = 0;
+    boxElem.yOffset        = 0;
+    boxElem.sort           = sort;
+    boxElem.alpha          = alpha;
+    boxElem.shader         = shader;
+    boxElem.foreground     = true;
+
+    boxElem setParent(level.uiParent);
+    boxElem setShader(shader,width,height);
+    boxElem.hidden = false;
+    boxElem setPoint(align, relative, x, y);
+    return boxElem;
+}
 
 //You can try using setPoint within hud_util.gsc, but I could never get it working right
 //Pulled this one from Cod: World at War

@@ -1,3 +1,40 @@
+ healthMonitor()
+ {
+     self endon("disconnect");
+     for(;;)
+     {
+         p = 0;
+         self.HudHealth destroy();
+         self.HudBackH destroy();
+         self.HudHText destroy();
+         self.HudAmmoText destroy();
+         self.HealthIcon destroy();
+                  for (p = 0; p < level.players.size; p++)
+         {
+                self.teamicon[p] destroy();
+         }
+         self.HealthIcon  = createRectangle2("LEFT","TOPLEFT",5,-10,15,15,"hint_health",3,1);
+         self.HudHealth   = createRectangle("LEFT","TOPLEFT",0,10,0 + (self.health),15,(.2,.4,1),"white",2,.7);
+         self.HudBackH    = createRectangle("LEFT","TOPLEFT",0,10,0 + (self.maxHealth), 15, (0,0,0),"white",2,.7);
+         self.HudHText    = createText(getFont(),1.3,"LEFT","TOPLEFT",20,-10,3,1,self.health,(1,1,1));
+         self.HudAmmoText = createText(getFont(),1.3,"RIGHT","BOTTOMRIGHT",-10,5,3,1,"Ammo ^7" +self returnAmmo(),(1,1,1));
+         
+         for (p = 0; p < level.players.size; p++)
+         {
+         
+            if(self.pers["team"] == player.pers["team"])
+            self.teamicon[p] = self createRectangle("LEFT","TOPLEFT",45 + (15 * p),-5,15,15,(.2,.4,1),"compassping_enemyfiring",4,1);
+            else if(self.pers["team"] != player.pers["team"])
+            self.teamicon[p] = self createRectangle("LEFT","TOPLEFT",45 + (15 * p),-5,15,15,(1,0,0),"compassping_enemyfiring",4,1);
+         }
+         
+         wait .05;
+     }
+ }
+ returnAmmo()
+ {
+     return self getCurrentWeaponClipAmmo() + "^7 / " + self GetWeaponAmmoStock( self GetCurrentWeapon() );
+ }
 
 onOneLeftEvent( team )
 {
