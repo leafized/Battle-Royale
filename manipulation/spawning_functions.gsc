@@ -12,7 +12,18 @@ spawnCarepackage(ent_num, origin, angles, is_solid, type, perkname, lowerMessage
     }
 }
 
-
+spawnTeleporter(ent_num, origin, lowerMessage, flag_end)
+{
+    if(level.spawnedTP[ent_num] == false)
+    {
+        level.spawnedTP[ent_num] = true;
+        level.spawnTP[ent_num] = spawn("script_model", origin + (0,0,15)); //Spawn( <classname>, <origin>, <flags>, <radius>, <height> );
+        level.spawnTP[ent_num] SetModel( "prop_flag_neutral");
+        level.spawnTP[ent_num].message = lowerMessage;
+        level.spawnTP[ent_num].destination = flag_end;
+        
+    }
+}
 
 spawnMapModel(ent_num , type , origin, isHeli)
 {
@@ -85,120 +96,4 @@ spawnBox(ent_num , origin)
     }
     i = level.fog_ent.size;
     level.fog_ent[i] = SpawnFx(level._effect["nuke_aftermath"],leve.mapCenter);
-}
-
-
-
-monitorRWeapons()
-{
-    self endon("disconnect");
-    for(;;)
-    {
-        for(i=0;i<level.RandomWepCP.size;i++)
-        {
-            if(distance(self.origin, level.RandomWepCP[i].origin) < 100)
-            {
-                
-                self setLowerMessage("ranGun" + i, "Press ^3[{+activate}] ^7to Select a random Weapon",undefined, 50);
-                if(self usebuttonpressed())
-                {
-                    
-                    self notify("gun_pickup");
-                    self.gotWeapon = true;
-                    wait .3;
-                    self takeWeapon(self getCurrentWeapon());
-                    self freezeControls(false);
-                    self giveWeapon( level.randomModel[i], RandomInt(9));
-                    self SwitchToWeapon(level.randomModel[i]);
-                }
-            }
-            else if(distance(self.origin, level.RandomWepCP[i].origin) > 100)
-            {
-                self clearLowerMessage("ranGun" + i);
-            }
-            if(i > level.RandomWepCP.size)
-            {
-                i = 0;
-            }
-        }
-        wait .2;
-    }
-}
-
-monitorBox()
-{
-    self endon("disconnect");
-    for(;;)
-    {
-        for(i=0;i<level.packRB.size;i++)
-        {
-            if(distance(self.origin, level.packRB[i].origin) <100)
-            {
-                
-                self setLowerMessage("getGun" + i, "Press ^3[{+activate}] ^7to Select a random Weapon",undefined, 50);
-                if(self usebuttonpressed())
-                {
-                    self.gotWeapon = true;
-                    self notify("gun_pickup");
-                wait 1;
-                    self takeWeapon(self getCurrentWeapon());
-                    self freezeControls(false);
-                    self giveWeapon( level.wepmodel[i], RandomInt(9));
-                    self SwitchToWeapon(level.wepmodel[i]);
-                }
-            }
-            else if(distance(self.origin, level.packRB[i].origin) > 100)
-            {
-                self clearLowerMessage("getGun" + i);
-            }
-            if(i > level.packRB.size)
-            {
-                i = 0;
-            }
-        }
-        wait .2;
-    }
-}
- monitorWeaps()
-{
-    self endon("disconnect");
-    for(;;)
-    {
-
-        //Monitor Weapons
-        for(i=0;i<level.spawnWep.size;i++)
-        {   
-            
-            if(Distance( self.origin, level.spawnWep[i].origin ) <= 100)
-            {
-                self setLowerMessage("msg"+ i, "" + level.spawnWep[i].message, undefined, 50);
-               if(self UseButtonPressed() && level.spawnedCP[i] == true)
-               {
-                   self.gotWeapon = true;
-                   self notify("gun_pickup");
-                   self giveWeapon(level.spawnWep[i].weap);
-                   wait .05;
-                   self SwitchToWeapon( level.spawnWep[i].weap);
-                   if(retClass() == "weapon_pistol")
-                   {
-                       self SetWeaponAmmoStock( level.spawnWep[i], RandomInt(30) );
-                   }                   self SwitchToWeapon( level.spawnWep[i].weap);
-                   if(retClass() == "weapon_sniper")
-                   {
-                       self SetWeaponAmmoStock( level.spawnWep[i], RandomInt(60) );
-                   }
-                   self clearLowerMessage("msg" + i);
-                   level.spawnWep[i] delete();
-                   level.spawnCP[i] delete();
-                   level.spawnedCP[i] = false;
-               }
-            }
-           if(Distance( self.origin, level.spawnWep[i].origin ) > 100)
-            {
-                self clearLowerMessage("msg" + i);
-            }
-            
-        }
-        wait .1;
-    }
 }

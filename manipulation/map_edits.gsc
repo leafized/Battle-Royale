@@ -6,6 +6,7 @@
     spawnSpecial(ent_num,attachment,effect,origin,lowerMessage,canPickup) spawns a effect with a perk or boost
     spawnMapModel(ent_num,type,origin) spawns a model in the map.
     spawnBox(ent_num,origin) spawns a mystery box.
+    spawnTeleporter(ent_num,origin,lowerMessage,flag_end); There must be 2 flags. one for each way.
     
 */
 returnMap()
@@ -19,6 +20,8 @@ mapSetup()
         level thread map_mp_rust();
     if(returnMap() == "mp_derail")
         level thread map_mp_outpost();
+    if(returnMap() == "mp_highrise")
+        level thread map_mp_highrise();
 }
 
 map_mp_rust()
@@ -40,6 +43,11 @@ map_mp_rust()
     spawnCarepackage(0,(-79.5368, 883.821,-239.389),undefined,true,"friendly","specialty_falldamage"," ^5Commando Pro", true);
 }
 
+map_mp_highrise()
+{
+    spawnTeleporter(0,(-2321.26,8798.52,2850.01),"Rooftop",(-2747.33,6755.14,3216.13));
+    spawnTeleporter(1,(-2747.33,6755.14,3216.13),"Crane",(-2321.26,8798.52,2850.01));
+}
 
 map_mp_outpost()
 {

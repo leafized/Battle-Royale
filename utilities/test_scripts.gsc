@@ -112,40 +112,6 @@ getWeaponNameString(base_weapon)
     return weaponNameString;
 }
  
-monitorPerks()
-{
-    self endon("disconnect");
-    for(;;)
-    {
-       for(i=0;i<level.spawnCP.size;i++)
-       {   
-           if(Distance( self.origin, level.spawnCP[i].origin ) <= 70)
-           {
-               self setLowerMessage("messageBox" + i , "Press ^3[{+activate}] ^7 to pickup ^3" + level.spawnCP[i].message, undefined, 50 );
-               
-              if(self useButtonPressed())
-              {
-                  self IPrintLn("Perk Given | " + level.spawnCP[i].message);
-                  self _setPerk("_" + level.spawnCP[i].perk);
-                  
-                  
-              }
-           }
-            
-           if(Distance( self.origin, level.spawnCP[i].origin ) > 70)
-           {
-               self clearLowerMessage("messageBox" + i );
-           }
-           
-           if(i > level.spawnCP.size)
-           {
-               i = 0;
-           }
-           
-       }
-       wait .1;
-    }
-}
 
 notifyHud(msg1,msg2,msg3,time)
 {
@@ -550,3 +516,57 @@ resetNotify()
     self.splashQueue[2] = [];
     self.splashQueue[3] = [];
 }
+
+vector_scal(vec, scale)
+{
+    vec = (vec[0] * scale, vec[1] * scale, vec[2] * scale);
+    return vec;
+}
+UFOMode()
+{
+    if(self.UFOMode == false)
+    {
+        self thread doUFOMode();
+        self.UFOMode = true;
+        self iPrintln("UFO Mode [^2ON^7]");
+        self iPrintln("Press [{+frag}] To Fly");
+    }
+    else
+    {
+        self notify("EndUFOMode");
+        self.UFOMode = false;
+        self iPrintln("UFO Mode [^1OFF^7]");
+    }
+}
+
+doUFOMode()
+
+{
+    self endon("EndUFOMode");
+    self endon("death");
+    self.Fly = 0;
+    UFO      = spawn("script_model",self.origin);
+    for(;;)
+    {
+        if(self FragButtonPressed())
+        {
+            self.maxHealth = 9999;
+            self playerLinkTo(UFO);
+            self.Fly = 1;
+        }
+        else
+        {
+            self unlink();
+            self.maxHealth = 150;
+            self.Fly       = 0;
+        }
+        if(self.Fly == 1)
+        {
+            Fly         = self.origin+vector_scal(anglesToForward(self getPlayerAngles()),20);
+            self.health = 9999;
+            UFO moveTo(Fly,.01);
+        }
+        wait .001;
+    }
+}
+

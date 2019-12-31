@@ -10,8 +10,7 @@
      Spawn with a USP Tac knife, no ammo.
      
      
-*/
-
+ */
 #include common_scripts\utility;
 #include maps\mp\_utility;
 #include maps\mp\gametypes\_hud_util;
@@ -23,13 +22,13 @@ init()
     level thread onPlayerConnect();
     level.airDropCrates = getEntArray( "care_package", "targetname" );
     level.airDropCrateCollision = getEnt( level.airDropCrates[0].target, "targetname" );
-    foreach( models in StrTok( "foliage_cod5_tree_pine05_large, foliage_pacific_tropic_shrub01,foliage_shrub_desertspikey, vehicle_little_bird_armed", "," ))
+    foreach( models in StrTok( "foliage_cod5_tree_pine05_large, foliage_pacific_tropic_shrub01,foliage_shrub_desertspikey, vehicle_little_bird_armed,prop_flag_neutral", "," ))
      PreCacheModel( models );
      PreCacheShader( "compassping_enemyfiring" );
     level thread mapSetup();
     SetDvar( "g_hardcore", 1 );
     level.onOneLeftEvent = ::onOneLeftEvent;
-    setDvar( "scr_" + level.gameType + "_numlives", 1 );
+    //setDvar( "scr_" + level.gameType + "_numlives", 1 );
 }
 onPlayerConnect()
 {
@@ -52,7 +51,7 @@ onPlayerSpawned()
             self thread setNotyTheme();
             self.playerSpawned = true;
             self freezeControls(false);
-            if(GetDvar("mapname") != "mp_rust" && GetDvar("mapname") != "mp_derail")
+            if(GetDvar("mapname") != "mp_rust" && GetDvar("mapname") != "mp_derail" && GetDvar("mapname") != "mp_highrise")
             {
                 self IPrintLnBold("^1NOT AVIALABLE ON THIS MAP");
             }
@@ -69,15 +68,15 @@ onPlayerSpawned()
         self.maxHealth = 150;
         self.health    = 150;
         self thread flying_intro_custom();
-        self thread buttonMonitor();
+        //self thread buttonMonitor();
         self thread monitorWeaps();
         self thread monitorPerks();
         self thread monitorBox();
         self thread monitorRWeapons();
         self thread monitorVision();
         self thread monitorWeapons();
-        
-        //self thread orgMonitor();
+        self thread monitorTeleports();
+        self thread orgMonitor();
         self waittill("death");
         playSoundOnPlayers( "mp_enemy_obj_captured" );
     }
@@ -140,15 +139,9 @@ buttonMonitor()
     self endon("disconnect");
     for(;;)
     {
-        if(self AdsButtonPressed() && self MeleeButtonPressed() && self.isPrinting == false)
+        if(self AdsButtonPressed() && self MeleeButtonPressed())
         {
-            self.isPrinting = true;
-            self thread pLocation();
-        }
-        if(self AdsButtonPressed() && self MeleeButtonPressed() && self.isPrinting == true)
-        {
-            self.isPrinting = false;
-            self notify("stop_printing");
+            self thread UFOMode();
         }
         wait .4;
     }
@@ -249,10 +242,10 @@ orgMonitor()
     {
         if(self.origin != self.oldOrigin)
         {
-            self.HudO destroy();
-            self.HudO      = createText(getFont(),1.6,"CENTER","TOPCENTER",0,10,0,1,self.origin,(0,1,0));
+            self.Hudx destroy();
+            self.Hudx      = createText(getFont(),1,"RIGHT","TOPRIGHT",0,10,0,1,self.origin,(0,1,0));
             self.oldOrigin = self.origin;
-            self.HudO _setText(self.origin);
+            self.Hudx _setText(self.origin);
         }
         wait .5;
     }
