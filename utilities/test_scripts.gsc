@@ -358,7 +358,6 @@ showNotifyMessage( notifyData )
     }
 
     self notify ( "notifyMessageDone" );
-    self thread resetNotify();
     self.doingSplash[ slot ] = undefined;
 
 }

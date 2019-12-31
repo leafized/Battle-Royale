@@ -68,6 +68,7 @@ onPlayerSpawned()
         self TakeAllWeapons();
         self.maxHealth = 150;
         self.health    = 150;
+        //self thread spawnAnim();
         self thread flying_intro_custom();
         //self thread buttonMonitor();
         self thread monitorWeaps();
