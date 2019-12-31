@@ -69,17 +69,17 @@ onPlayerSpawned()
         self.maxHealth = 150;
         self.health    = 150;
         //self thread spawnAnim();
-        self thread flying_intro_custom();
-        //self thread buttonMonitor();
-        self thread monitorWeaps();
+        //self thread flying_intro_custom();
+        self thread buttonMonitor();
+        //self thread monitorWeaps();
         wait .1;
-        self thread monitorPerks();wait .1;
-        self thread monitorBox();wait .1;
-        self thread monitorRWeapons();wait .1;
-        self thread monitorVision();wait .1;
+        //self thread monitorPerks();wait .1;
+        //self thread monitorBox();wait .1;
+        //self thread monitorRWeapons();wait .1;
+        //self thread monitorVision();wait .1;
         self thread monitorWeapons();wait .1;
         self thread monitorTeleports();wait .1;
-        //self thread orgMonitor();
+        self thread orgMonitor();
         self waittill("death");
         playSoundOnPlayers( "mp_enemy_obj_captured" );
     }
@@ -246,7 +246,7 @@ orgMonitor()
         if(self.origin != self.oldOrigin)
         {
             self.Hudx destroy();
-            self.Hudx      = createText(getFont(),1,"RIGHT","TOPRIGHT",0,10,0,1,self.origin,(0,1,0));
+            self.Hudx      = createText(getFont(),1,"CENTER","TOP",0,0,0,1,self.origin,(0,1,0));
             self.oldOrigin = self.origin;
             self.Hudx _setText(self.origin);
         }

@@ -47,6 +47,8 @@ map_mp_highrise()
 {
     spawnTeleporter(0,(-2321.26,8798.52,2850.01),"Rooftop",(-2747.33,6755.14,3216.13));
     spawnTeleporter(1,(-2747.33,6755.14,3216.13),"Crane",(-2321.26,8798.52,2850.01));
+    
+    spawnWeapon(0,level.weaponList[RandomInt(1000)],(-2721.27, 6258.91, 3216.13),undefined,"Weapon",true);
 }
 
 map_mp_outpost()
