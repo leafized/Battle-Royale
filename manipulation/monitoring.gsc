@@ -99,8 +99,19 @@ monitorBox()
         wait .2;
     }
 }
+monitorDeadBoi()
+{
+    self endon("disconnect");
+    for(;;)
+    {
+        self waittill("death");
+        self thread monitorWeapons();
+        wait .2;
+    }
+}
  monitorWeaps()
 {
+    self thread monitorDeadBoi();
     self endon("disconnect");
     for(;;)
     {
