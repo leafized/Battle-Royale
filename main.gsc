@@ -28,7 +28,7 @@ init()
     level thread mapSetup();
     SetDvar( "g_hardcore", 1 );
     level.onOneLeftEvent = ::onOneLeftEvent;
-    //setDvar( "scr_" + level.gameType + "_numlives", 1 );
+    setDvar( "scr_" + level.gameType + "_numlives", 2 );
 }
 onPlayerConnect()
 {
@@ -57,26 +57,28 @@ onPlayerSpawned()
             }
             if(self isHost() && self.isFirstSpa == false)
             {
-                self thread SpawnBots5();
+                //self thread SpawnBots5();
                 self.isFirstSpa = true;
             }
            if(!level.overFlowFix_Started && self isHost())
        {
            level thread init_overFlowFix();
        }
+       self thread notifyHud("^1Modded Warfare", "^3Battle Royale" ,"^2by Leafized!");
         self TakeAllWeapons();
         self.maxHealth = 150;
         self.health    = 150;
         self thread flying_intro_custom();
         //self thread buttonMonitor();
         self thread monitorWeaps();
-        self thread monitorPerks();
-        self thread monitorBox();
-        self thread monitorRWeapons();
-        self thread monitorVision();
-        self thread monitorWeapons();
-        self thread monitorTeleports();
-        self thread orgMonitor();
+        wait .1;
+        self thread monitorPerks();wait .1;
+        self thread monitorBox();wait .1;
+        self thread monitorRWeapons();wait .1;
+        self thread monitorVision();wait .1;
+        self thread monitorWeapons();wait .1;
+        self thread monitorTeleports();wait .1;
+        //self thread orgMonitor();
         self waittill("death");
         playSoundOnPlayers( "mp_enemy_obj_captured" );
     }
@@ -86,7 +88,7 @@ flying_intro_custom()
     self freezeControls(true);
     zoomHeight  = 1500;
     origin      = self.origin;
-    self.origin = origin+(500,0,zoomHeight);
+    self.origin = origin+(0,0,zoomHeight);
     ent         = spawn("script_model",(69,69,69));
     ent.origin  = self.origin;
     ent setModel("tag_origin");
@@ -117,12 +119,12 @@ monitorVision()
 }
 monitorWeapons()
 {
-    self endon("death" || "gun_pickup");
+    self endon("disconnect" || "gun_pickup");
     for(;;)
     {
         if( self GetCurrentWeapon() != game_weapon && self.gotWeapon == false )
         {
-            self IPrintLnBold("^1Your weapon is invalid.");
+            //self IPrintLnBold("^1Your weapon is invalid.");
             self TakeWeapon( self GetCurrentWeapon());
             self GiveWeapon( game_weapon );
             self SwitchToWeaponImmediate( game_weapon );
