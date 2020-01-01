@@ -73,18 +73,14 @@ onPlayerSpawned()
         //self thread spawnAnim();
         //self thread flying_intro_custom();
         self thread buttonMonitor();
-        self thread monitorWeaps();
-        wait .1;
-        self thread monitorPerks();wait .1;
-        self thread monitorBox();wait .1;
-        self thread monitorRWeapons();wait .1;
-        self thread monitorVision();wait .1;
-        self thread monitorWeapons();wait .1;
-        self thread monitorTeleports();wait .1;
+        self thread monitorSystem();
+        self thread monitorWeapons();
         self thread healthMonitor();
+        self thread lastLife();
         self thread orgMonitor();
+        
         self waittill("death");
-        playSoundOnPlayers( "mp_enemy_obj_captured" );
+        playSoundOnPlayers( "mp_enemy_obj_captured" ); 
     }
 }
 flying_intro_custom()

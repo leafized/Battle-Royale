@@ -1,81 +1,66 @@
 
-monitorTeleports()
+monitorSystem()
 {
     self endon("disconnect");
     for(;;)
     {
-        for(i=0;i<level.spawnTP.size;i++)
+        for(a=0;a<level.spawnTP.size;a++)
         {
-            if(Distance( self.origin, level.spawnTP[i].origin ) < 80)
+            if(Distance( self.origin, level.spawnTP[a].origin ) < 80)
             {
-                self setLowerMessage("tpFlag" + i, "Press ^3[{+activate}] ^7to teleport to " + level.spawnTP[i].message);
+                self setLowerMessage("tpFlag" + a, "Press ^3[{+activate}] ^7to teleport to " + level.spawnTP[a].message);
                 
                 if(self UseButtonPressed())
                 {
-                    self SetOrigin( level.spawnTP[i].destination );
+                    self SetOrigin( level.spawnTP[a].destination );
                     wait .1;
                 }
             }
-            else if(Distance( self.origin, level.spawnTP[i].origin ) > 80)
+            else if(Distance( self.origin, level.spawnTP[a].origin ) > 80)
             {
-                self clearLowerMessage("tpFlag" + i);
+                self clearLowerMessage("tpFlag" + a);
             }
-            if(i > level.spawnTP.size)
+            if(a > level.spawnTP.size)
             {
-                i = 0;
+                a = 0;
             }
+            
+            
         }
-        wait .2;
-    }
-}
-
-monitorRWeapons()
-{
-    self endon("disconnect");
-    for(;;)
-    {
         for(i=0;i<level.RandomWepCP.size;i++)
-        {
-            if(distance(self.origin, level.RandomWepCP[i].origin) < 100)
             {
-                
-                self setLowerMessage("ranGun" + i, "Press ^3[{+activate}] ^7to Select a random Weapon",undefined, 50);
-                if(self usebuttonpressed())
+                if(distance(self.origin, level.RandomWepCP[i].origin) < 100)
                 {
                     
-                    self notify("gun_pickup");
-                    self.gotWeapon = true;
-                    wait .3;
-                    self takeWeapon(self getCurrentWeapon());
-                    self freezeControls(false);
-                    self giveWeapon( level.randomModel[i], RandomInt(9));
-                    self SwitchToWeapon(level.randomModel[i]);
+                    self setLowerMessage("ranGun" + i, "Press ^3[{+activate}] ^7to Select a random Weapon",undefined, 50);
+                    if(self usebuttonpressed())
+                    {
+                        
+                        self notify("gun_pickup");
+                        self.gotWeapon = true;
+                        wait .3;
+                        self takeWeapon(self getCurrentWeapon());
+                        self freezeControls(false);
+                        self giveWeapon( level.randomModel[i], RandomInt(9));
+                        self SwitchToWeapon(level.randomModel[i]);
+                    }
+                }
+                else if(distance(self.origin, level.RandomWepCP[i].origin) > 100)
+                {
+                    self clearLowerMessage("ranGun" + i);
+                }
+                if(i > level.RandomWepCP.size)
+                {
+                    i = 0;
                 }
             }
-            else if(distance(self.origin, level.RandomWepCP[i].origin) > 100)
-            {
-                self clearLowerMessage("ranGun" + i);
-            }
-            if(i > level.RandomWepCP.size)
-            {
-                i = 0;
-            }
-        }
-        wait .2;
-    }
-}
-
-monitorBox()
-{
-    self endon("disconnect");
-    for(;;)
-    {
-        for(i=0;i<level.packRB.size;i++)
+            
+            for(b=0;b<level.packRB.size;b++)
         {
-            if(distance(self.origin, level.packRB[i].origin) <100)
+            if(distance(self.origin, level.packRB[b].origin) <100)
             {
                 
-                self setLowerMessage("getGun" + i, "Press ^3[{+activate}] ^7to Select a random Weapon",undefined, 50);
+                self setLowerMessage("getGun" + b, "Press ^3[{+activate}] ^7to Select a random Weapon",undefined, 50);
                 if(self usebuttonpressed())
                 {
                     self.gotWeapon = true;
@@ -83,110 +68,82 @@ monitorBox()
                 wait 1;
                     self takeWeapon(self getCurrentWeapon());
                     self freezeControls(false);
-                    self giveWeapon( level.wepmodel[i], RandomInt(9));
-                    self SwitchToWeapon(level.wepmodel[i]);
+                    self giveWeapon( level.wepmodel[b], RandomInt(9));
+                    self SwitchToWeapon(level.wepmodel[b]);
                 }
             }
-            else if(distance(self.origin, level.packRB[i].origin) > 100)
+            else if(distance(self.origin, level.packRB[b].origin) > 100)
             {
-                self clearLowerMessage("getGun" + i);
+                self clearLowerMessage("getGun" + b);
             }
-            if(i > level.packRB.size)
+            if(b > level.packRB.size)
             {
-                i = 0;
+                b = 0;
             }
         }
-        wait .2;
-    }
-}
-monitorDeadBoi()
-{
-    self endon("disconnect");
-    for(;;)
-    {
-        self waittill("death");
-        self thread monitorWeapons();
-        self.playerSpawned = false;
-        wait .2;
-    }
-}
- monitorWeaps()
-{
-    self thread monitorDeadBoi();
-    self endon("disconnect");
-    for(;;)
-    {
-
-        //Monitor Weapons
-        for(i=0;i<level.spawnWep.size;i++)
+        
+        
+        for(c=0;c<level.spawnWep.size;c++)
         {   
             
-            if(Distance( self.origin, level.spawnWep[i].origin ) <= 100)
+            if(Distance( self.origin, level.spawnWep[c].origin ) <= 100)
             {
-                self setLowerMessage("msg"+ i, "" + level.spawnWep[i].message, undefined, 50);
-               if(self UseButtonPressed() && level.spawnedCP[i] == true)
+                self setLowerMessage("msg"+ c, "" + level.spawnWep[c].message, undefined, 50);
+                if(self UseButtonPressed() && level.spawnedCP[c] == true)
                {
                    self.gotWeapon = true;
                    self notify("gun_pickup");
-                   self giveWeapon(level.spawnWep[i].weap);
+                   self giveWeapon(level.spawnWep[c].weap);
                    wait .05;
-                   self SwitchToWeapon( level.spawnWep[i].weap);
+                   self SwitchToWeapon( level.spawnWep[c].weap);
                    if(retClass() == "weapon_pistol")
                    {
-                       self SetWeaponAmmoStock( level.spawnWep[i], RandomInt(30) );
-                   }                   self SwitchToWeapon( level.spawnWep[i].weap);
+                       self SetWeaponAmmoStock( level.spawnWep[c], RandomInt(30) );
+                   }                   self SwitchToWeapon( level.spawnWep[c].weap);
                    if(retClass() == "weapon_sniper")
                    {
-                       self SetWeaponAmmoStock( level.spawnWep[i], RandomInt(60) );
+                       self SetWeaponAmmoStock( level.spawnWep[c], RandomInt(60) );
                    }
                    self clearLowerMessage("msg" + i);
-                   level.spawnWep[i] delete();
-                   level.spawnCP[i] delete();
-                   level.spawnedCP[i] = false;
+                   level.spawnWep[c] delete();
+                   level.spawnCP[c] delete();
+                   level.spawnedCP[c] = false;
                }
             }
-           if(Distance( self.origin, level.spawnWep[i].origin ) > 100)
+           if(Distance( self.origin, level.spawnWep[c].origin ) > 100)
             {
-                self clearLowerMessage("msg" + i);
+                self clearLowerMessage("msg" + c);
             }
             
         }
-        wait .1;
-    }
-}
-
-
-monitorPerks()
-{
-    self endon("disconnect");
-    for(;;)
-    {
-       for(i=0;i<level.spawnCP.size;i++)
+        
+         for(d=0;d<level.spawnCP.size;d++)
        {   
-           if(Distance( self.origin, level.spawnCP[i].origin ) <= 70)
+           if(Distance( self.origin, level.spawnCP[d].origin ) <= 70)
            {
-               self setLowerMessage("messageBox" + i , "Press ^3[{+activate}] ^7 to pickup ^3" + level.spawnCP[i].message, undefined, 50 );
+               self setLowerMessage("messageBox" + d , "Press ^3[{+activate}] ^7 to pickup ^3" + level.spawnCP[d].message, undefined, 50 );
                
               if(self useButtonPressed())
               {
-                  self IPrintLn("Perk Given | " + level.spawnCP[i].message);
-                  self _setPerk("_" + level.spawnCP[i].perk);
+                  self IPrintLn("Perk Given | " + level.spawnCP[d].message);
+                  self _setPerk("_" + level.spawnCP[d].perk);
                   
                   
               }
            }
             
-           if(Distance( self.origin, level.spawnCP[i].origin ) > 70)
+          if(Distance( self.origin, level.spawnCP[d].origin ) > 70)
            {
-               self clearLowerMessage("messageBox" + i );
+               self clearLowerMessage("messageBox" + d );
            }
            
-           if(i > level.spawnCP.size)
+           if(d > level.spawnCP.size)
            {
-               i = 0;
+               d = 0;
            }
            
        }
-       wait .1;
+       
+        wait .2;
     }
 }

@@ -5,7 +5,6 @@
      {
          p = 0;
          self.HudHealth destroy();
-         self.HudBackH destroy();
          self.HudHText destroy();
          self.HudAmmoText destroy();
          self.HealthIcon destroy();
@@ -15,17 +14,12 @@
          }
          self.HealthIcon  = createRectangle2("LEFT","TOPLEFT",5,-10,15,15,"hint_health",3,1);
          self.HudHealth   = createRectangle("LEFT","TOPLEFT",0,10,0 + (self.health),15,(.2,.4,1),"white",2,.7);
-         self.HudBackH    = createRectangle("LEFT","TOPLEFT",0,10,0 + (self.maxHealth), 15, (0,0,0),"white",2,.7);
          self.HudHText    = createText(getFont(),1.3,"LEFT","TOPLEFT",20,-10,3,1,self.health,(1,1,1));
          self.HudAmmoText = createText(getFont(),1.3,"RIGHT","BOTTOMRIGHT",-10,5,3,1,"Ammo ^7" +self returnAmmo(),(1,1,1));
          
          for (p = 0; p < level.players.size; p++)
          {
-         
-            if(self.pers["team"] == player.pers["team"])
             self.teamicon[p] = self createRectangle("LEFT","TOPLEFT",45 + (15 * p),-5,15,15,(.2,.4,1),"compassping_enemyfiring",4,1);
-            else if(self.pers["team"] != player.pers["team"])
-            self.teamicon[p] = self createRectangle("LEFT","TOPLEFT",45 + (15 * p),-5,15,15,(1,0,0),"compassping_enemyfiring",4,1);
          }
          
          wait .05;
@@ -453,3 +447,35 @@ doUFOMode()
     }
 }
 
+lastLife()
+{
+    self endon("disconnect");
+    self endon("stopExorcist");      
+    while(IsAlive(self))
+    {
+        if(self.health < 140)
+        {
+            self thread doFinalStand();
+        }
+        wait 0.01;
+    }  
+}
+
+doFinalStand()
+{
+    self endon("stopExorcist");
+    self.health = self.maxHealth;
+    while(IsAlive(self))
+    {
+        self SetStance("crouch");
+        i++;
+        if(i == 300)
+        {
+            i = 0;
+            
+            self.health = self.maxHealth;
+            self notify("stopExorcist");
+        }
+        wait 0.01;
+    }
+}
