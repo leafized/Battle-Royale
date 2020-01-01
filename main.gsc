@@ -83,6 +83,7 @@ onPlayerSpawned()
         playSoundOnPlayers( "mp_enemy_obj_captured" ); 
     }
 }
+
 flying_intro_custom()
 {
     self freezeControls(true);
@@ -104,6 +105,7 @@ flying_intro_custom()
     ent delete();
     self notify("flying_intro_done");
 }
+
 monitorVision()
 {
     self endon("disconnect");
@@ -111,8 +113,8 @@ monitorVision()
     {
         if(self.vss == false)
         {
-            self VisionSetNakedForPlayer( "grayscale", .2 );
-           self _setPerk( "_specialty_blastshield" );
+            self VisionSetNakedForPlayer( "default", .2 );
+            self _setPerk( "_specialty_blastshield" );
         }
         wait .05;
     }
