@@ -8,7 +8,7 @@
          self.HudHText destroy();
          self.HudAmmoText destroy();
          self.HealthIcon destroy();
-                  for (p = 0; p < level.players.size; p++)
+         for (p = 0; p < level.players.size; p++)
          {
                 self.teamicon[p] destroy();
          }
@@ -20,9 +20,11 @@
          for (p = 0; p < level.players.size; p++)
          {
             self.teamicon[p] = self createRectangle("LEFT","TOPLEFT",45 + (15 * p),-5,15,15,(.2,.4,1),"compassping_enemyfiring",4,1);
+            if(p == level.players.size +1)
+            p = 0;
          }
-         
-         wait .05;
+        
+        wait .25;
      }
  }
  returnAmmo()

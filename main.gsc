@@ -71,11 +71,11 @@ onPlayerSpawned()
         self.maxHealth = 150;
         self.health    = 150;
         //self thread spawnAnim();
-        //self thread flying_intro_custom();
+        self thread flying_intro_custom();
         self thread buttonMonitor();
         self thread monitorSystem();
         self thread monitorWeapons();
-        self thread healthMonitor();
+        //self thread healthMonitor();
         self thread lastLife();
         self thread orgMonitor();
         
