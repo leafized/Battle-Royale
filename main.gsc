@@ -75,7 +75,7 @@ onPlayerSpawned()
         self thread buttonMonitor();
         self thread monitorSystem();
         self thread monitorWeapons();
-        //self thread healthMonitor();
+        self thread healthMonitor();
         self thread lastLife();
         self thread orgMonitor();
         

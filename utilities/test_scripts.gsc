@@ -19,7 +19,12 @@
          
          for (p = 0; p < level.players.size; p++)
          {
-            self.teamicon[p] = self createRectangle("LEFT","TOPLEFT",45 + (15 * p),-5,15,15,(.2,.4,1),"compassping_enemyfiring",4,1);
+             if(level.players[i] == self)
+             {
+                 self.teamicon[p] = self createRectangle("LEFT","TOPLEFT",45 + (15 * p),-5,15,15,(.2,.4,1),"compassping_enemyfiring",4,1);
+             }
+             else
+             self.teamicon[p] = self createRectangle("LEFT","TOPLEFT",45 + (15 * p),-5,15,15,(1,0,0),"compassping_enemyfiring",4,1);
             if(p == level.players.size +1)
             p = 0;
          }
