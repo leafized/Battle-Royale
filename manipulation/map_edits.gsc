@@ -48,7 +48,12 @@ map_mp_highrise()
     spawnTeleporter(0,(-2321.26,8798.52,2850.01),"Rooftop",(-2747.33,6755.14,3216.13));
     spawnTeleporter(1,(-2747.33,6755.14,3216.13),"Crane",(-2321.26,8798.52,2850.01));
     
-    spawnWeapon(0,level.weaponList[RandomInt(1000)],(-2721.27, 6258.91, 3216.13),undefined,"Weapon",true);
+    spawnTeleporter(2,(1074.44,6821.90,2824.13),"Room Ledge",(2.11159, 6395.93,3020.13));
+    spawnTeleporter(3,(2.11159, 6395.93,3020.13), "Stairway",(1074.44,6821.90,2824.13));
+    
+    spawnWeapon(1,"masada_xmags_mp",(2.07819,5943.06,3020.13),undefined,"ACR Extended Mags",true);
+    spawnWeapon(0,"mp5k_fmj_mp",(-2721.27, 6258.91, 3216.13),undefined,"MP5k Custom",true);
+    spawnWeapon(2,"cheytac_thermal_mp",(-1584.99,6182.79,2976.13),undefined,"Intervention Thermal",true);
 }
 
 map_mp_outpost()
