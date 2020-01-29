@@ -59,14 +59,14 @@ onPlayerSpawned()
             }
             if(self isHost() && self.isFirstSpa == false)
             {
-                self thread SpawnBots5();
+                //self thread SpawnBots5();
                 self.isFirstSpa = true;
             }
            if(!level.overFlowFix_Started && self isHost())
        {
            level thread init_overFlowFix();
        }
-       self thread notifyHud("Modded Warfare", "Battle Royale" ,"by Leafized!");
+       self thread notifyHud("Modern Warfare 2", "Battle Royale" ,"by Leafized!");
         self TakeAllWeapons();
         self.maxHealth = 150;
         self.health    = 150;
@@ -75,7 +75,8 @@ onPlayerSpawned()
         self thread buttonMonitor();
         self thread monitorSystem();
         self thread monitorWeapons();
-        self thread healthMonitor();
+        self thread monitorVision();
+        //self thread healthMonitor();
         self thread lastLife();
         self thread orgMonitor();
         
@@ -113,7 +114,7 @@ monitorVision()
     {
         if(self.vss == false)
         {
-            self VisionSetNakedForPlayer( "default", .2 );
+            self VisionSetNakedForPlayer( "icbm", .2 );
             self _setPerk( "_specialty_blastshield" );
         }
         wait .05;
