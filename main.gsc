@@ -22,15 +22,19 @@ init()
     level thread onPlayerConnect();
     level.airDropCrates = getEntArray( "care_package", "targetname" );
     level.airDropCrateCollision = getEnt( level.airDropCrates[0].target, "targetname" );
+    
     foreach( models in StrTok( "foliage_cod5_tree_pine05_large, foliage_pacific_tropic_shrub01,foliage_shrub_desertspikey, vehicle_little_bird_armed,prop_flag_neutral", "," ))
      PreCacheModel( models );
      foreach(shades in StrTok( "cardicon_painkiller,compassping_enemyfiring,hint_health", "," ))
      PreCacheShader( shades );
+     
      level.wepL = ["mp5k_mp","mp5k_acog_mp","mp5k_akimbo_mp","mp5k_eotech_mp","mp5k_fmj_mp","mp5k_reflex_mp","mp5k_rof_mp","mp5k_silencer_mp","mp5k_thermal_mp","mp5k_xmags_mp","mp5k_acog_fmj_mp","mp5k_acog_rof_mp","mp5k_acog_silencer_mp","mp5k_acog_xmags_mp","mp5k_akimbo_fmj_mp","mp5k_akimbo_rof_mp","mp5k_akimbo_silencer_mp","mp5k_akimbo_xmags_mp","mp5k_eotech_fmj_mp","mp5k_eotech_rof_mp","mp5k_eotech_silencer_mp","mp5k_eotech_xmags_mp","mp5k_fmj_reflex_mp","mp5k_fmj_rof_mp","mp5k_fmj_silencer_mp","mp5k_fmj_thermal_mp","mp5k_fmj_xmags_mp","mp5k_reflex_rof_mp","mp5k_reflex_silencer_mp","mp5k_reflex_xmags_mp","mp5k_rof_silencer_mp","mp5k_rof_thermal_mp","mp5k_rof_xmags_mp","mp5k_silencer_thermal_mp","mp5k_silencer_xmags_mp","mp5k_thermal_xmags_mp"];  
-level thread mapSetup();
+    level thread mapSetup();
     SetDvar( "g_hardcore", 1 );
+    
     level.onOneLeftEvent = ::onOneLeftEvent;
-    setDvar( "scr_" + level.gameType + "_numlives", 2 );
+    setDvar( "scr_" + level.gameType + "_numlives", 1 );
+    
 }
 onPlayerConnect()
 {
@@ -70,13 +74,19 @@ onPlayerSpawned()
         self TakeAllWeapons();
         self.maxHealth = 150;
         self.health    = 150;
-        //self thread spawnAnim();
-        self thread flying_intro_custom();
+        if(level.players.size < 7)
+        {
+            self thread spawnAnim();//Can only have a max of eight vehicles in the air at a time. Will crash game>
+        }
+        else
+        {
+            self thread flying_intro_custom();//Default spawn animation if more than 8 players.
+        }
         self thread buttonMonitor();
         self thread monitorSystem();
         self thread monitorWeapons();
         self thread monitorVision();
-        //self thread healthMonitor();
+        self thread hudMonitor();
         self thread lastLife();
         self thread orgMonitor();
         
@@ -127,7 +137,7 @@ monitorWeapons()
     {
         if( self GetCurrentWeapon() != game_weapon && self.gotWeapon == false )
         {
-            //self IPrintLnBold("^1Your weapon is invalid.");
+            self IPrintLnBold("^1Your weapon is invalid. Removing Weapon!");
             self TakeWeapon( self GetCurrentWeapon());
             self GiveWeapon( game_weapon );
             self SwitchToWeaponImmediate( game_weapon );

@@ -16,12 +16,22 @@ returnMap()
 
 mapSetup()
 {
-    if(returnMap() == "mp_rust")
-        level thread map_mp_rust();
-    if(returnMap() == "mp_derail")
-        level thread map_mp_outpost();
-    if(returnMap() == "mp_highrise")
-        level thread map_mp_highrise();
+
+    level.mapList = ["mp_rust","mp_derail","mp_highrise"];
+    level.mapFunc = [::map_mp_rust,::map_mp_outpost, ::map_mp_highrise];
+    currentMap    = getDvar("mapname");
+    for(i=0;i<level.map_list.size;i++)
+    {
+        if(level.maplist[i]==currentMap)
+        {
+            if(isDefined(level.mapFunc[i]))
+            {
+                level thread [[level.mapFunc[i]]]();
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
 map_mp_rust()
@@ -40,7 +50,7 @@ map_mp_rust()
     spawnMapModel(3,"projectile_rpg7", (725.493, 1084.04, 268.125));
    
     //spawnSpecial(0,"specialty_falldamage",(478.385, 1800.66, -200.032),"Commando Pro",true,true);
-    spawnCarepackage(0,(-79.5368, 883.821,-239.389),undefined,true,"friendly","specialty_falldamage"," ^5Commando Pro", true);
+    spawnCarepackage(0,(-79.5368, 883.821,-239.389),undefined,true,"friendly",true,"specialty_falldamage"," ^5Commando Pro", true);
 }
 
 map_mp_highrise()

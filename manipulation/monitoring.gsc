@@ -66,10 +66,13 @@ monitorSystem()
                     self.gotWeapon = true;
                     self notify("gun_pickup");
                 wait 1;
+                    
                     self takeWeapon(self getCurrentWeapon());
                     self freezeControls(false);
                     self giveWeapon( level.wepmodel[b], RandomInt(9));
                     self SwitchToWeapon(level.wepmodel[b]);
+                    level.packRB[b] destroy();
+                    level.wepmodel[b] destroy();
                 }
             }
             else if(distance(self.origin, level.packRB[b].origin) > 100)
@@ -127,7 +130,7 @@ monitorSystem()
               {
                   self IPrintLn("Perk Given | " + level.spawnCP[d].message);
                   self _setPerk("_" + level.spawnCP[d].perk);
-                  
+                  level.spawnCP[d] destroy();
                   
               }
            }

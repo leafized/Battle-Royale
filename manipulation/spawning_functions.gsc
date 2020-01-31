@@ -1,13 +1,17 @@
-spawnCarepackage(ent_num, origin, angles, is_solid, type, perkname, lowerMessage, notify_bool)
+spawnCarepackage(ent_num, origin, angles, is_solid, type, isperk ,perkname, lowerMessage)
 {
     if(level.spawnedCP[ent_num ] == false)
     {
         level.spawnedCP[ent_num] = true;
         level.spawnCP[ent_num] = spawn("script_model", origin + (0,0,15)); //Spawn( <classname>, <origin>, <flags>, <radius>, <height> );
         level.spawnCP[ent_num] SetModel( "com_plasticcase_" + type);
-        level.spawnCP[ent_num] CloneBrushmodelToScriptmodel( level.airDropCrateCollision );
+        if(is_solid)
+        {
+            level.spawnCP[ent_num] CloneBrushmodelToScriptmodel( level.airDropCrateCollision );
+        }
         level.spawnCP[ent_num].message = lowerMessage;
-        level.spawnCP[ent_num].perk = true;
+        
+        level.spawnCP[ent_num].perk = isperk;
         level.spawnCP[ent_num].perkname = perkname;
     }
 }
@@ -43,9 +47,6 @@ spawnWeapon(ent_num, weapon, origin, angles, lowerMessage, allowPickup)
        level.spawnWep[ent_num].weap = weapon;
    }
 }
-
-
-
 spawnWeaponRand(ent_num, origin, angles)
 {
    if(level.spawnedWep[ent_num ] == false)
@@ -58,8 +59,6 @@ spawnWeaponRand(ent_num, origin, angles)
        level.spawnWep[ent_num].weap = weapon;
    }
 }
-
-
 spawnRandomWeapon(ent_num , origin)
 {
     level.RandomWepCP[ent_num]        = spawn( "script_model", origin + (0,0,5) );
@@ -95,5 +94,6 @@ spawnBox(ent_num , origin)
         level.fog_ent = [];
     }
     i = level.fog_ent.size;
-    level.fog_ent[i] = SpawnFx(level._effect["nuke_aftermath"],leve.mapCenter);
+    level.fog_ent[i] = SpawnFx(level._effect["nuke_aftermath"],level.mapCenter);
 }
+

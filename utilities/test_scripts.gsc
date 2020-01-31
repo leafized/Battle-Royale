@@ -1,4 +1,4 @@
- healthMonitor()
+ hudMonitor()
  {
      self endon("disconnect");
      for(;;)
@@ -13,7 +13,7 @@
          self.HudHealth   = createRectangle("LEFT","TOPLEFT",0,10,0 + (self.health),15,(.2,.4,1),"white",2,.7);
          self.HudHText    = createText(getFont(),1.3,"LEFT","TOPLEFT",20,-10,3,1,self.health,(1,1,1));
          self.HudAmmoText = createText(getFont(),1.3,"RIGHT","BOTTOMRIGHT",-10,5,3,1,"Ammo ^7" +self returnAmmo(),(1,1,1));
-        wait .25;
+         wait .15;
      }
  }
  returnAmmo()
