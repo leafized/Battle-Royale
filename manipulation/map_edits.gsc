@@ -20,9 +20,9 @@ mapSetup()
     level.mapList = ["mp_rust","mp_derail","mp_highrise"];
     level.mapFunc = [::map_mp_rust,::map_mp_outpost, ::map_mp_highrise];
     currentMap    = getDvar("mapname");
-    for(i=0;i<level.map_list.size;i++)
+    for(i=0;i<level.mapList.size;i++)
     {
-        if(level.maplist[i]==currentMap)
+        if(level.mapList[i]==currentMap)
         {
             if(isDefined(level.mapFunc[i]))
             {

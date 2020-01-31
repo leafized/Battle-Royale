@@ -4,6 +4,14 @@ monitorSystem()
     self endon("disconnect");
     for(;;)
     {
+        if(self.origin != self.oldOrigin && debugging == true)
+        {
+            self.Hudx destroy();
+            self.Hudx      = createText(getFont(),1,"CENTER","TOP",0,0,0,1,self.origin,(0,1,0));
+            self.oldOrigin = self.origin;
+            self.Hudx _setText(self.origin);
+        }
+        wait .5;
         for(a=0;a<level.spawnTP.size;a++)
         {
             if(Distance( self.origin, level.spawnTP[a].origin ) < 80)
