@@ -17,8 +17,8 @@ returnMap()
 mapSetup()
 {
 
-    level.mapList = ["mp_rust","mp_derail","mp_highrise"];
-    level.mapFunc = [::map_mp_rust,::map_mp_outpost, ::map_mp_highrise];
+    level.mapList = ["mp_rust","mp_derail","mp_highrise","mp_estate"];
+    level.mapFunc = [::map_mp_rust,::map_mp_outpost, ::map_mp_highrise, ::map_mp_estate];
     currentMap    = getDvar("mapname");
     for(i=0;i<level.mapList.size;i++)
     {
@@ -81,4 +81,16 @@ map_mp_outpost()
     spawnWeapon(10, "cheytac_mp",(49.6679,-3631.61,90.125), undefined, " Intervention", false);
     
     spawnMapModel(0,"vehicle_little_bird_armed", (-866.476, 1533.88, -15.875) + (0,0,120), true);
+}
+map_mp_estate()
+{
+    spawnTeleporter(0,(1092.36, 2896.18, 173.03),"Roof Top!",(1275.43,3568.39, 317.721));
+    spawnTeleporter(1,(1275.43,3568.39, 317.721), "Truck Bed!", (1092.36, 2896.18, 173.03));
+    
+    spawnWeapon(0, "aa12_xmags_mp", (1159.33, 3918.91, 310.261), undefined, "AA12 Extended Mags", true);
+    spawnWeapon(1, "striker_xmags_mp", (1332.10, 3290.10, 178.125), undefined, "Striker Extended Mags", true);
+    spawnWeapon(2, "cheytac_xmags_mp", (-175.921,3915.69,192.826), undefined, "Intervention Extended Mags", true);
+    spawnWeapon(3, "f2000_fmj_xmags", (-507.422, 3553.22, 150.125), undefined, "F2000 FMJ Extended Mags", true);
+    //spawnWeapon(4, );
+    //spawnWeapon(ent_num,weapon,origin,angles,lowerMessage,allowPickup)
 }

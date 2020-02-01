@@ -10,21 +10,21 @@ spawnThreads()
         self TakeAllWeapons();
         self.maxHealth = 150;
         self.health    = 150;
+        /*
         if(level.players.size < 7)
         {
             self thread spawnAnim();//Can only have a max of eight vehicles in the air at a time. Will crash game>
         }
         else
-        {
+        {*/
             self thread flying_intro_custom();//Default spawn animation if more than 8 players.
-        }
+        //}
         self thread buttonMonitor();
         self thread monitorSystem();
         self thread monitorWeapons();
         self thread monitorVision();
         self thread hudMonitor();
         self thread lastLife();
-        //self thread orgMonitor();
         
         self waittill("death");
         playSoundOnPlayers( "mp_enemy_obj_captured" ); 
@@ -125,5 +125,48 @@ spawnAnim()
         self thread spawnHeli(newlocs );
         
         
+
+}
+
+spawnHeli(newlocs)
+{
+    self endon("stop_teleporting");
+    for(;;)
+    {
+
+
+        if( Distance(self.FlyBy.origin, newlocs ) <= 700 && self.InVehicle == true)
+       {
+           self.FlyBy vehicle_setspeed(5, 45);
+       }
+
+       if( Distance(self.origin, newlocs ) <= 150 && self.InVehicle == true)
+       {
+           self.FlyBy vehicle_setspeed(0, 100);
+           self.InVehicle = false;
+           self.FlyBy delete();
+           self show();
+           self EnableWeapons();
+           self FreezeControls( false );
+           self giveWeapon( self.myWeap, 0, false );
+           self switchToWeapon( self.myWeap );
+           self unlink( self.FlyBy );
+           self SetOrigin(newlocs);
+           self setClientDvar( "cg_thirdperson", 0 ); 
+           self ShowAllParts();
+           self _setPerk( "_specialty_blastshield" );
+           self VisionSetNaked( "grayscale", 0.5 );
+           self notify("default_night_mp");
+
+       }
+       wait 1;
+    }
+}
+
+getRandomWeapon()
+{
+    wep = level.weaponList[RandomInt( level.weaponList.size)] ;
+    self IPrintLn(getWeaponNameString(wep.id));
+    return wep;
 
 }

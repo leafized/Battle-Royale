@@ -16,7 +16,7 @@
 #include maps\mp\gametypes\_hud_util;
 
 #define game_weapon = "usp_tactical_mp";
-#define debugging = false;
+#define debugging = true;
 
 init()
 {

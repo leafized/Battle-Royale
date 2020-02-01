@@ -12,6 +12,7 @@
          self.HealthIcon  = createRectangle2("LEFT","TOPLEFT",5,-10,15,15,"hint_health",3,1);
          self.HudHealth   = createRectangle("LEFT","TOPLEFT",0,10,0 + (self.health),15,(.2,.4,1),"white",2,.7);
          self.HudHText    = createText(getFont(),1.3,"LEFT","TOPLEFT",20,-10,3,1,self.health,(1,1,1));
+         weapon           = self GetCurrentWeapon();
          self.HudAmmoText = createText(getFont(),1.3,"RIGHT","BOTTOMRIGHT",-10,5,3,1,"Ammo ^7" +self returnAmmo(),(1,1,1));
          wait .15;
      }
@@ -20,7 +21,10 @@
  {
      return self getCurrentWeaponClipAmmo() + "^7 / " + self GetWeaponAmmoStock( self GetCurrentWeapon() );
  }
-
+returnWeaponName( weaponId )
+{
+    return tableLookupIString("mp/statstable.csv", 0, int( tableLookup("mp/statstable.csv", 4, weaponId, 0) ), 3);
+}
 onOneLeftEvent( team )
 {
     winner = getLastLivingPlayer();
