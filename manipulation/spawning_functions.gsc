@@ -87,6 +87,21 @@ spawnBox(ent_num , origin)
     }
 }
 
+spawnCamera(ent_num, origin, angles, lowerMessage)
+{
+    level.cameraTV[ent_num] = spawn("script_model", origin + (0,0,5));
+    level.cameraTV[ent_num] SetModel( "com_widescreen_monitor" );
+    level.cameraTV[ent_num].angles = angles;
+    level.cameraTV[ent_num].message = lowerMessage;
+}
+spawnCamControl(ent_num, origin, angles, lowerMessage, tp_origin)
+{
+    level.cameraCTRL[ent_num] = spawn("script_model", origin + (0,0,5));//com_laptop_2_open
+    level.cameraCTRL[ent_num] SetModel( "com_laptop_2_open" );
+    level.cameraCTRL[ent_num].angles = angles;
+    level.cameraCTRL[ent_num].message = lowerMessage;
+    level.cameraCTRL[ent_num].tp = tp_origin;
+}
  addFogEnt()
 {
     if(!isDefined(level.fog_ent))

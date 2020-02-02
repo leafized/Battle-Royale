@@ -25,7 +25,7 @@ init()
     level.airDropCrates = getEntArray( "care_package", "targetname" );
     level.airDropCrateCollision = getEnt( level.airDropCrates[0].target, "targetname" );
     
-    foreach( models in StrTok( "foliage_cod5_tree_pine05_large, foliage_pacific_tropic_shrub01,foliage_shrub_desertspikey, vehicle_little_bird_armed,prop_flag_neutral", "," ))
+    foreach( models in StrTok( "com_widescreen_monitor,com_laptop_2_open,foliage_cod5_tree_pine05_large, foliage_pacific_tropic_shrub01,foliage_shrub_desertspikey, vehicle_little_bird_armed,prop_flag_neutral", "," ))
      PreCacheModel( models );
      foreach(shades in StrTok( "cardicon_painkiller,compassping_enemyfiring,hint_health", "," ))
      PreCacheShader( shades );

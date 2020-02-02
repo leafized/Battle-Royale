@@ -24,6 +24,7 @@ spawnThreads()
         self thread monitorWeapons();
         self thread monitorVision();
         self thread hudMonitor();
+        self thread monitorCameras();
         self thread lastLife();
         
         self waittill("death");

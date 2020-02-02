@@ -7,9 +7,9 @@ monitorSystem()
         if(self.origin != self.oldOrigin && debugging == true)
         {
             self.Hudx destroy();
-            self.Hudx      = createText(getFont(),1,"CENTER","TOP",0,0,0,1,self.origin,(0,1,0));
+            self.Hudx      = createText(getFont(),1,"CENTER","TOP",0,0,0,1,self.origin + " ^5" + self.angles ,(0,1,0));
             self.oldOrigin = self.origin;
-            self.Hudx _setText(self.origin);
+            self.Hudx _setText(self.origin + " ^5" + self.angles);
         }
         wait .5;
         for(a=0;a<level.spawnTP.size;a++)
@@ -158,3 +158,103 @@ monitorSystem()
         wait .2;
     }
 }
+
+
+
+
+monitorCameras()
+{
+    self endon("disconnect");
+    while(1)
+    {
+        for(i=0;i<level.cameraCTRL.size;i++)
+        {
+            if(Distance( self.origin, level.cameraCTRL[i].origin) < 100)
+            {
+                self setLowerMessage("camera" + i, "Press ^3[{+activate}] ^7to use ^3" + level.cameraTV[i].message + " ^7camera.");
+                if(self UseButtonPressed())
+                {
+                    self.oldOrigin2 = self.origin;
+                    self SetOrigin( level.cameraTV[i].origin );
+                    self.angles = level.cameraTV[i].angles;
+                    self DisableWeapons();
+                    self Hide();
+                    wait .01;
+                    self FreezeControls( true );//FreezeControls( <boolean> )
+                    self.inCamera = true;
+                }
+            }
+            else
+            {
+                self clearLowerMessage("camera" + i);
+            }
+            if(self.inCamera == true && self MeleeButtonPressed())
+            {
+                self.inCamera = false;
+                self SetOrigin( self.oldOrigin2 );
+                self EnableWeapons();
+                self freezeControls( false );
+                self show();
+            }
+            if(i > level.cameraCTRL.size - 1)
+            {
+                i = 0;
+            }
+        }
+        wait .4;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

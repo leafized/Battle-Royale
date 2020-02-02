@@ -80,6 +80,10 @@ map_mp_outpost()
     spawnWeapon(9, "m4_fmj_shotgun_mp",(-454.699,-2175.11,118.125), undefined, undefined, false);
     spawnWeapon(10, "cheytac_mp",(49.6679,-3631.61,90.125), undefined, " Intervention", false);
     
+    
+    spawnCamera(0,(419.69, 1552.02, 469.51),(0, 63.9903 , 0),"Outside Camera 1");
+    spawnCamControl(0,(164.687 , 1435.79 , 298.125),(0, 0.666003 , 0),"Outside Camera 1",(419.69, 1552.02, 469.51));
+    
     spawnMapModel(0,"vehicle_little_bird_armed", (-866.476, 1533.88, -15.875) + (0,0,120), true);
 }
 map_mp_estate()
