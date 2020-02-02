@@ -26,6 +26,17 @@
            spawnSpecial(ent_num,entity_item,origin,lowerMessage,canPickup,isPerk,isAmmo,isKillstreak)
            spawns  perks, attachments, ammo,etc..
            
+           spawnWeapon(ent_num,weapon,origin,angles,lowerMessage,allowPickup)
+           
+           spawnWeaponRand(ent_num,origin,angles)
+           spawnRandomWeapon(ent_num,origin)
+           
+           spawnBox(ent_num,origin)
+           spawnCamera(ent_num,origin,angles,lowerMessage)
+           spawnCamControl(ent_num,origin,angles,lowerMessage,tp_origin)
+           spawnHeli(newlocs);
+           
+           
            monitorWeaps()
            -monitors weapon 
            

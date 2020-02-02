@@ -113,7 +113,7 @@ spawnAnim()
         self.FlyBy delete();
         self.myWeap       = self getCurrentWeapon();
         self.InVehicle    = false;
-        self.FlyBy        = spawnHelicopter(self, self.origin+(0,0,250.75), self.angles, "pavelow_mp", "vehicle_pavelow");
+        self.FlyBy        = spawnHelicopter(self, self.origin+(0,0,250.75), self.angles, "pavelow_mp", "vehicle_little_bird_armed");
         self.FlyBy.angles = ( 0, 0, 0 );
         self.InVehicle    = true;
         self clearLowerMessage("destroy");

@@ -176,11 +176,11 @@ monitorCameras()
                 {
                     self.oldOrigin2 = self.origin;
                     self SetOrigin( level.cameraTV[i].origin );
-                    self.angles = level.cameraTV[i].angles;
                     self DisableWeapons();
                     self Hide();
-                    wait .01;
-                    self FreezeControls( true );//FreezeControls( <boolean> )
+                    self SetPlayerAngles( level.cameraTV[i].angle );
+                    wait .05;
+                    self FreezeControls(true);//FreezeControls( <boolean> )
                     self.inCamera = true;
                 }
             }
@@ -195,6 +195,7 @@ monitorCameras()
                 self EnableWeapons();
                 self freezeControls( false );
                 self show();
+                
             }
             if(i > level.cameraCTRL.size - 1)
             {
@@ -204,7 +205,15 @@ monitorCameras()
         wait .4;
     }
 }
-
+loadLoc(origin)
+{
+    self endon("stop_camera");
+    while(1)
+    {
+        self SetOrigin( origin );
+        wait .01;
+    }
+}
 
 
 
