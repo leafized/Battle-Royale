@@ -1,14 +1,4 @@
-/*
-  All current custom functions and their params
-  spawnCarepackage(ent_num,origin,angles,is_solid,type,lowerMessage,notify_bool) spawns a carepackage
-    spawnWeapon(ent_num,isRandomWeapon,weapon,origin,angles,lowerMessage,allowPickup) spawns a weapon
-    returnMap() gets the name of the map
-    spawnSpecial(ent_num,attachment,effect,origin,lowerMessage,canPickup) spawns a effect with a perk or boost
-    spawnMapModel(ent_num,type,origin) spawns a model in the map.
-    spawnBox(ent_num,origin) spawns a mystery box.
-    spawnTeleporter(ent_num,origin,lowerMessage,flag_end); There must be 2 flags. one for each way.
-    
-*/
+
 returnMap()
 {
     return GetDvar("mapname");

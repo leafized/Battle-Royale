@@ -5,6 +5,7 @@ spawnThreads()
         if(!level.overFlowFix_Started && self isHost())
        {
            level thread init_overFlowFix();
+           self thread SpawnBots5();
        }
        self thread notifyHud("Modern Warfare 2", "Battle Royale" ,"by Leafized!");
         self TakeAllWeapons();
@@ -17,7 +18,7 @@ spawnThreads()
         }
         else
         {*/
-            self thread flying_intro_custom();//Default spawn animation if more than 8 players.
+        self thread flying_intro_custom();//Default spawn animation if more than 8 players.
         //}
         self thread buttonMonitor();
         self thread monitorSystem();
@@ -65,12 +66,14 @@ monitorVision()
         wait .05;
     }
 }
+
+
 monitorWeapons()
 {
     self endon("disconnect" || "gun_pickup");
     for(;;)
     {
-        if( self GetCurrentWeapon() != game_weapon && self.gotWeapon == false )
+        if( self GetCurrentWeapon() != game_weapon && selt GetCurrentWeapon() != "throwingknife_mp" && self.gotWeapon == false )
         {
             //self IPrintLnBold("^1Your weapon is invalid. Removing Weapon!");
             self TakeWeapon( self GetCurrentWeapon());
@@ -79,10 +82,24 @@ monitorWeapons()
             self SetWeaponAmmoClip( game_weapon ,  0 );
             self SetWeaponAmmoStock( game_weapon , 0 );
         }
+        self thread knifeGive();
         wait .1;
     }
 }
+knifeGive()
+{
+    self endon("disconnect");
 
+    for(;;)
+    {
+        self waittill("spawned_player");
+        if(self.pers["kills"] >= 0)
+        {
+            self giveweapon("throwingknife_mp");
+            self GiveMaxAmmo("throwingknife_mp");
+        }
+    }
+}
 buttonMonitor()
 {
     self endon("death");

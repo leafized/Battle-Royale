@@ -102,6 +102,7 @@ spawnCamControl(ent_num, origin, angles, lowerMessage, tp_origin)
     level.cameraCTRL[ent_num].message = lowerMessage;
     level.cameraCTRL[ent_num].tp = tp_origin;
 }
+
  addFogEnt()
 {
     if(!isDefined(level.fog_ent))
