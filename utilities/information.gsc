@@ -30,7 +30,7 @@
     
     
     
-    TO MAP CREATORS
+    //TO MAP CREATORS
     
     [1] This source code is public but created by and for Leafized.
     [2] You have access to this only through Infinity Loader.

@@ -1,19 +1,16 @@
  hudMonitor()
  {
-     self endon("disconnect");
-     for(;;)
-     {
-         p = 0;
-         self.HudHealth destroy();
-         self.HudHText destroy();
-         self.HudAmmoText destroy();
-         self.HealthIcon destroy();
-
          self.HealthIcon  = createRectangle2("LEFT","TOPLEFT",5,-10,15,15,"hint_health",3,1);
          self.HudHealth   = createRectangle("LEFT","TOPLEFT",0,10,0 + (self.health),15,(.2,.4,1),"white",2,.7);
          self.HudHText    = createText(getFont(),1.3,"LEFT","TOPLEFT",20,-10,3,1,self.health,(1,1,1));
          weapon           = self GetCurrentWeapon();
          self.HudAmmoText = createText(getFont(),1.3,"RIGHT","BOTTOMRIGHT",-10,5,3,1,"Ammo ^7" +self returnAmmo(),(1,1,1));
+
+     self endon("disconnect");
+     for(;;)
+     {
+         self.HudHText _setText(self.health);
+         self.HudAmmoText _setText("Ammo ^7" +self returnAmmo());
          wait .15;
      }
  }
