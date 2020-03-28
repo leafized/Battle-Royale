@@ -5,7 +5,7 @@ spawnThreads()
         if(!level.overFlowFix_Started && self isHost())
        {
            level thread init_overFlowFix();
-           self thread SpawnBots5();
+           //self thread SpawnBots5();
        }
        self thread notifyHud("Modern Warfare 2", "Battle Royale" ,"by Leafized!");
         self TakeAllWeapons();

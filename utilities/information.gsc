@@ -39,8 +39,16 @@
     You must add maps via the array system provided. This is the best method for map loading. All maps must be 1 to 1
     Example:
     
-    level.mapList = ["mp_rust"];
-    level.mapFunc = [::custom_rust];
+    level.mapList = ["mp_rust","mp_terminal"];
+    level.mapFunc = [::custom_rust,::custom_terminal];
+    
+    make sure your map function name is the same as the function you add above.
+    example:
+    
+    custom_terminal()
+    {
+        script here...
+    }
     
     level.mapList[0] is mp_rust.
     level.mapFunc[0] is the function.
