@@ -7,8 +7,8 @@ returnMap()
 mapSetup()
 {
 
-    level.mapList = ["mp_rust","mp_derail","mp_highrise","mp_estate"];
-    level.mapFunc = [::map_mp_rust,::map_mp_outpost, ::map_mp_highrise, ::map_mp_estate];
+    level.mapList = ["mp_boneyard","mp_rust","mp_derail","mp_highrise","mp_estate"];
+    level.mapFunc = [::map_mp_boneyard,::map_mp_rust,::map_mp_outpost, ::map_mp_highrise, ::map_mp_estate];
     currentMap    = getDvar("mapname");
     for(i=0;i<level.mapList.size;i++)
     {
@@ -23,7 +23,11 @@ mapSetup()
     }
     return false;
 }
-
+map_mp_boneyard()
+{
+    spawnWeapon(0, "deserteaglegold_mp", (-1165.45,1458.64,-139.875),undefined, "Desert Eagle Gold",false);
+    spawnWeapon(1, "masada_xmags_mp", (-1728.61,431.19,-127.875),undefined, "ACR Extended Mags", false);
+}
 map_mp_rust()
 {
 

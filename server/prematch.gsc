@@ -108,13 +108,26 @@ buttonMonitor()
     {
         if(self AdsButtonPressed() && self MeleeButtonPressed())
         {
-            self thread UFOMode();
+            self thread showLocation();
         }
         wait .4;
     }
 }
 
-
+showLocation()
+{
+    if(!isDefined(self.locHud))
+        self.locHud = createText("default", 1.2, "center", "center",0,0,1,1,self.origin,(1,1,1));
+    while(1)
+    {
+        if(self.origin != self.oldOrigin)
+        {
+            self.oldOrigin = self.origin;
+            self.locHud _setText(self.origin);
+        }
+        wait 1;
+    }
+}
 spawnAnim()
 {
     self DisableWeapons();

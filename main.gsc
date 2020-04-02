@@ -18,9 +18,7 @@ init()
      PreCacheModel( models );
      foreach(shades in StrTok( "cardicon_painkiller,compassping_enemyfiring,hint_health", "," ))
      PreCacheShader( shades );
-     
-     level.wepL = ["mp5k_mp","mp5k_acog_mp","mp5k_akimbo_mp","mp5k_eotech_mp","mp5k_fmj_mp","mp5k_reflex_mp","mp5k_rof_mp","mp5k_silencer_mp","mp5k_thermal_mp","mp5k_xmags_mp","mp5k_acog_fmj_mp","mp5k_acog_rof_mp","mp5k_acog_silencer_mp","mp5k_acog_xmags_mp","mp5k_akimbo_fmj_mp","mp5k_akimbo_rof_mp","mp5k_akimbo_silencer_mp","mp5k_akimbo_xmags_mp","mp5k_eotech_fmj_mp","mp5k_eotech_rof_mp","mp5k_eotech_silencer_mp","mp5k_eotech_xmags_mp","mp5k_fmj_reflex_mp","mp5k_fmj_rof_mp","mp5k_fmj_silencer_mp","mp5k_fmj_thermal_mp","mp5k_fmj_xmags_mp","mp5k_reflex_rof_mp","mp5k_reflex_silencer_mp","mp5k_reflex_xmags_mp","mp5k_rof_silencer_mp","mp5k_rof_thermal_mp","mp5k_rof_xmags_mp","mp5k_silencer_thermal_mp","mp5k_silencer_xmags_mp","mp5k_thermal_xmags_mp"];  
-    level thread mapSetup();
+     level thread mapSetup();
     SetDvar( "g_hardcore", 1 );
     
     level.onOneLeftEvent = ::onOneLeftEvent;
@@ -49,9 +47,6 @@ onPlayerSpawned()
     }
 }
 onPlayerKilled( eInflictor, attacker, iDamage, sMeansOfDeath, sWeapon, vDir, sHitLoc, psOffsetTime, deathAnimDuration, lifeId )
-{
-    foreach(player in level.players)
-    {
-        player IPrintLnBold(eInflictor.name + " has eliminated a player!" );
-    }
+{    
+    player sayAll("I have eliminated ^1" + self.name );
 }
